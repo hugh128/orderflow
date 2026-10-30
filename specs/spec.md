@@ -112,7 +112,7 @@ Cada pedido muestra: cantidad de paquetes en cada uno de los cuatro estados (inc
 
 El usuario escribe una frase (ej. "Pedido A-1042 para Textiles Sol, 250 unidades") y el sistema propone los campos del pedido.
 
-- **CA-34** Dado un texto válido, cuando se solicita el análisis, entonces el sistema devuelve una propuesta `{ número, cliente, unidades }` que **rellena el formulario** para que el usuario la revise y edite. **Nunca guarda el pedido automáticamente.**
+- **CA-34** Dado un texto válido, cuando se solicita el análisis desde el asistente, entonces el sistema muestra una propuesta `{ número, cliente, unidades }`. Al pulsar «Usar estos datos», **rellena el formulario** para que el usuario la revise y edite. **Nunca guarda el pedido automáticamente.** Ajuste de interacción autorizado por el usuario después de T23.
 - **CA-35** La propuesta de la IA se valida con el mismo esquema Zod de RF-02. Si es inválida o incompleta, se informa al usuario y se deja el formulario vacío o parcialmente relleno.
 - **CA-36** El texto de entrada tiene un máximo de 500 caracteres; textos vacíos o más largos se rechazan antes de llamar al modelo.
 - **CA-37** La llamada al modelo ocurre solo en el servidor; la API key nunca llega al navegador ni al repositorio.

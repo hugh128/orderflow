@@ -242,6 +242,10 @@ Decisiones:
 
 ## 8. Extra IA: crear pedidos con lenguaje natural
 
+### Ajuste de experiencia autorizado después de T23
+
+La entrada de IA será un botón flotante «Asistente IA». Abre un diálogo modal: panel lateral en escritorio y panel inferior en móvil. El asistente presenta los campos detectados antes de aplicarlos. «Usar estos datos» cierra el panel, rellena solo los campos detectados y enfoca el formulario para revisión. Cerrar o Escape conserva el borrador y devuelve el foco al botón de apertura. La creación manual sigue disponible y la IA nunca guarda automáticamente. No se añaden capacidades de chat, consultas o cambios de estado.
+
 ### 8.1 Flujo
 
 ```

@@ -107,7 +107,7 @@ body {
 .skip-link { position: absolute; top: -5rem; left: 1rem; z-index: 10; background: var(--surface); padding: 0.75rem; border: 1px solid var(--accent); }
 .skip-link:focus { top: 1rem; }
 @media (max-width: 850px) { .workspace { grid-template-columns: 1fr; gap: 2rem; } .workspace aside { position: static; } }
-.ai-order-box { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+.ai-order-box { min-width: 0; }
 .ai-order-box textarea { width: 100%; min-height: 6rem; resize: vertical; border: 1px solid var(--border); border-radius: 0.375rem; padding: 0.75rem; background: var(--surface); color: var(--foreground); font: inherit; font-size: 0.875rem; }
 .ai-order-box textarea:disabled { opacity: 0.65; }
 .ai-help { display: flex; align-items: start; justify-content: space-between; gap: 0.75rem; margin: 0.5rem 0 0.75rem; font-size: 0.75rem; }
@@ -116,6 +116,37 @@ body {
 .ai-result { font-size: 0.875rem; overflow-wrap: anywhere; }
 .ai-result > p { margin-top: 0.75rem; }
 .ai-issues { margin-top: 0.5rem; padding-left: 1.25rem; list-style: disc; color: var(--muted); }
+.assistant-launcher { position: fixed; z-index: 20; right: 1.5rem; bottom: calc(1.5rem + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 0.75rem; min-height: 60px; padding: 0.75rem 1.25rem; border-radius: 2rem; background: var(--accent); color: white; box-shadow: 0 6px 24px #173a3133; text-align: left; cursor: pointer; }
+.assistant-launcher:hover { background: #104d41; }
+.assistant-launcher strong { display: block; font-size: 0.875rem; }
+.assistant-launcher small { display: block; font-size: 0.6875rem; margin-top: 0.125rem; }
+.assistant-spark { font-size: 1.75rem; line-height: 1; }
+.assistant-dialog { position: fixed; inset: 1.25rem 1.25rem 1.25rem auto; margin: 0; width: min(28rem, calc(100vw - 2.5rem)); height: calc(100dvh - 2.5rem); max-height: none; max-width: none; padding: 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); color: var(--foreground); box-shadow: 0 12px 60px #142d3533; overflow: hidden; }
+.assistant-dialog[open] { display: flex; flex-direction: column; }
+.assistant-dialog::backdrop { background: #152e3959; }
+body:has(.assistant-dialog[open]) { overflow: hidden; }
+.assistant-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+.assistant-heading h2 { margin: 0; font-size: 1.125rem; }
+.assistant-heading .eyebrow { margin-bottom: 0.25rem; }
+.assistant-close { font-size: 1.5rem; line-height: 1; padding: 0; flex-shrink: 0; }
+.assistant-body { overflow-y: auto; overscroll-behavior: contain; padding: 1.5rem; min-height: 0; }
+.assistant-intro { margin-bottom: 1.5rem; }
+.assistant-intro-icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 0.75rem; background: #eaf4ed; color: var(--accent); font-size: 1.5rem; margin-bottom: 1rem; }
+.assistant-intro h3, .assistant-proposal h3 { font-size: 1rem; font-weight: 650; margin-bottom: 0.5rem; }
+.assistant-proposal { margin-top: 1.25rem; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; background: #f6f8f4; }
+.assistant-proposal dl { display: grid; gap: 0.75rem; margin: 1rem 0; }
+.assistant-proposal dt { font-size: 0.75rem; color: var(--muted); }
+.assistant-proposal dd { font-size: 0.875rem; font-weight: 600; overflow-wrap: anywhere; }
+.assistant-proposal .button { margin-top: 1rem; }
+.assistant-footnote { margin-top: 1.5rem; font-size: 0.75rem; line-height: 1.6; color: var(--muted); }
+.page-footer { padding-bottom: 5rem; }
+@media (max-width: 600px) {
+  .assistant-launcher { right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom)); min-height: 52px; }
+  .assistant-launcher small { display: none; }
+  .assistant-dialog { inset: auto 0 0; width: 100%; height: auto; max-height: 92dvh; border-radius: 1rem 1rem 0 0; }
+  .assistant-body { padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom)); }
+  .assistant-heading { padding: 1rem 1.25rem; }
+}
 @media (max-width: 480px) {
   .header-inner { padding: 1rem; } .header-caption { display: none; }
   .page-shell { padding: 1.75rem 1rem 1rem; } .panel { padding: 1.25rem; }
