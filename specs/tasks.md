@@ -99,7 +99,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - TanStack Form con `createOrderSchema`; campo de unidades `type="text" inputMode="numeric"`; errores bajo cada campo; el 409 de duplicado se muestra en el campo número; deshabilitar el botón mientras guarda; limpiar el formulario al guardar con éxito.
   - Pruebas de componente (Vitest + Testing Library) para validación y mensajes. (`feat(ui): create order form`)
 
-- [ ] **T18 Lista de pedidos y tarjetas** ⏱ 35 min · Dep. T14, T16 · **CA-22 a 26, 29, 30**
+- [x] **T18 Lista de pedidos y tarjetas** ⏱ 35 min · Dep. T14, T16 · **CA-22 a 26, 29, 30**
   - `useOrders`, `OrderList` (carga / vacío / error con reintento), `OrderCard` con barra de progreso accesible, conteo de los 4 estados (incluye ceros) y detalle expandible de paquetes. (`feat(ui): order list with progress`)
 
 - [ ] **T19 Acciones sobre paquetes** ⏱ 35 min · Dep. T15, T18 · **CA-31, 32, 33**
