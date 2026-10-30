@@ -94,7 +94,8 @@ body {
 .header-caption { font-size: 0.75rem; color: var(--muted); }
 .header-actions { display: flex; align-items: center; gap: 1.5rem; }
 .theme-switch { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--muted); }
-.theme-switch select { min-height: 44px; max-width: 7rem; padding: 0.5rem; border: 1px solid var(--input-border); border-radius: 0.375rem; background: var(--surface); color: var(--foreground); cursor: pointer; font-size: 0.8125rem; }
+.theme-switch select { min-height: 32px; max-width: 7rem; padding: 0.25rem 0.5rem; border: 1px solid var(--input-border); border-radius: 0.375rem; background: var(--surface); color: var(--foreground); cursor: pointer; font-size: 0.8125rem; }
+@media (pointer: coarse) { .theme-switch select { min-height: 44px; } }
 input, textarea, select { color: inherit; }
 .page-shell { max-width: 76rem; padding: 2.5rem 2rem 1.5rem; margin: auto; }
 .page-heading { margin-bottom: 2rem; }

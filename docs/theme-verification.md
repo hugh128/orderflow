@@ -14,7 +14,7 @@ Las variables CSS separan texto de acento y fondo de botones para conservar cont
 - Suite completa: 38 archivos, **414 pruebas** aprobadas. Lint, TypeScript y build aprobados.
 - Navegador local sobre build de producción y BD de ejemplos: selección Oscuro conservada al recargar aunque el sistema prefiera Claro. Sistema responde a cambios emulados Claro/Oscuro.
 - Consola sin errores ni advertencias, incluidos avisos de hidratación.
-- Selector operable con teclado, foco visible y altura de 44 px.
+- Selector operable con teclado y foco visible. Ajuste visual solicitado: altura compacta de 32 px en escritorio; 44 px con puntero táctil para conservar el área de toque.
 - Móvil a 375 px: página y diálogo de 375 px, sin desbordamiento horizontal. Selector del resumen con superficie oscura.
 - Contraste calculado con los colores efectivos del navegador: doce pares de texto/fondo por tema, incluidos mensajes, etiquetas y botones normales/hover. Mínimo claro **5.24:1**; mínimo oscuro **5.88:1**, superiores a 4.5:1. Los controles deshabilitados no se incluyen en estos mínimos.
 - Captura real en [modo oscuro](media/orderflow-dark.png). Se revisó el resultado visual; no se modificaron datos de producción ni se llamó al proveedor de IA durante esta revisión.
