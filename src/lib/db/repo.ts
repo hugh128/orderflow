@@ -46,19 +46,19 @@ export async function transitionPackage(
   const validatedReason = kind === "reject" ? rejectionReasonSchema.parse(reason) : null;
   const db = getDb();
   return db.transaction(async (tx) => {
-  const [updated] = await tx.update(packages)
-    .set({ status, updatedAt: new Date() })
-    .where(and(eq(packages.id, id), eq(packages.status, expected)))
-    .returning();
-  if (updated) {
-    await tx.insert(packageEvents).values({ packageId: id, fromStatus: expected, toStatus: updated.status, kind, reason: validatedReason });
-    return updated;
-  }
+    const [updated] = await tx.update(packages)
+      .set({ status, updatedAt: new Date() })
+      .where(and(eq(packages.id, id), eq(packages.status, expected)))
+      .returning();
+    if (updated) {
+      await tx.insert(packageEvents).values({ packageId: id, fromStatus: expected, toStatus: updated.status, kind, reason: validatedReason });
+      return updated;
+    }
 
-  const [current] = await tx.select({ status: packages.status }).from(packages)
-    .where(eq(packages.id, id)).limit(1);
-  if (!current) throw new NotFoundError();
-  throw new StatusConflictError(current.status);
+    const [current] = await tx.select({ status: packages.status }).from(packages)
+      .where(eq(packages.id, id)).limit(1);
+    if (!current) throw new NotFoundError();
+    throw new StatusConflictError(current.status);
   });
 }
 
@@ -95,8 +95,34 @@ export async function getPackageHistory(id: string) {
     .orderBy(desc(packageEvents.id)).limit(50)).reverse();
 }
 
-export async function getOrderEvents(orderId: string) {
-  return (await getDb().select({ event: packageEvents, sequence: packages.sequence }).from(packageEvents)
-    .innerJoin(packages, eq(packages.id, packageEvents.packageId))
-    .where(eq(packages.orderId, orderId)).orderBy(desc(packageEvents.id)).limit(50)).reverse();
+export async function getOrderHistorySnapshot(id: string) {
+  return getDb().transaction(
+    async (tx) => {
+      const [order] = await tx
+        .select()
+        .from(orders)
+        .where(eq(orders.id, id))
+        .limit(1);
+      if (!order) return null;
+      const rows = await tx
+        .select()
+        .from(packages)
+        .where(eq(packages.orderId, id));
+      const events = (
+        await tx
+          .select({ event: packageEvents, sequence: packages.sequence })
+          .from(packageEvents)
+          .innerJoin(packages, eq(packages.id, packageEvents.packageId))
+          .where(eq(packages.orderId, id))
+          .orderBy(desc(packageEvents.id))
+          .limit(50)
+      ).reverse();
+      return {
+        order: { ...order, summary: computeProgress(rows) },
+        events,
+        observedAt: new Date().toISOString(),
+      };
+    },
+    { isolationLevel: "repeatable read", accessMode: "read only" },
+  );
 }

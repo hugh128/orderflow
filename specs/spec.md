@@ -136,8 +136,10 @@ El usuario escribe una frase (ej. "Pedido A-1042 para Textiles Sol, 250 unidades
 | `GET /api/orders` | Listar pedidos con resumen (RF-05, RF-07) | 500 |
 | `GET /api/orders/:id` | Detalle con paquetes (RF-07) | 404 |
 | `POST /api/packages/:id/advance` | Avanzar estado (RF-03). Body: `expectedStatus` (el estado que el cliente ve; evita saltos por doble clic) | 400, 404, 409 |
-| `POST /api/packages/:id/reject` | Rechazar desde Revisión (RF-04). Body: `expectedStatus` | 400, 404, 409 |
+| `POST /api/packages/:id/reject` | Rechazar desde Revisión (RF-04). Body: `expectedStatus`, `reason` obligatorio (extra aprobado) | 400, 404, 409 |
 | `POST /api/orders/parse` | Proponer pedido desde texto (extra IA) | 400, 429, 503 |
+| `GET /api/packages/:id/history` | Consultar los últimos 50 movimientos registrados | 400, 404 |
+| `POST /api/orders/:id/summary` | Resumen de estado e historial, sin escrituras | 400, 404, 429, 503 |
 
 ## 9. Decisiones tomadas y supuestos
 

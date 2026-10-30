@@ -15,6 +15,6 @@ export const testDb = drizzle(repoSql, {
 
 export async function resetDb() {
   if (getTestDatabaseUrl() !== url) throw new Error("La conexión de pruebas cambió durante la suite");
-  await testSql`TRUNCATE TABLE packages, orders CASCADE`;
+  await testSql`TRUNCATE TABLE package_events, packages, orders CASCADE`;
   queryLog.length = 0;
 }
