@@ -111,3 +111,21 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: el usuario observó el indicador de carga al hacer hover; el navegador confirmó botón deshabilitado y cursor `wait` sin petición activa.
 - Cómo se corrigió: los botones deshabilitados de la caja de IA usan flecha cuando `aria-busy` es falso. Durante el análisis se conserva el cursor de espera.
 - Lección / regla añadida: deshabilitado y ocupado son estados distintos; comprobar el cursor tanto con campos vacíos como con una petición pendiente.
+
+## Error 18: opción de transacción de solo lectura incorrecta
+- Qué pasó: escribí `readOnly: true` para Drizzle al añadir la fotografía del resumen; la versión instalada requiere `accessMode: "read only"`.
+- Cómo se detectó: la revisión de `PgTransactionConfig` del paquete instalado mostró el nombre y tipo correctos.
+- Cómo se corrigió: se utiliza `accessMode: "read only"` junto con aislamiento repeatable read; la API se prueba contra PostgreSQL real.
+- Lección / regla añadida: consultar los tipos instalados antes de fijar opciones del ORM, además de compilar y probar la transacción.
+
+## Error 19: un beforeEach devolvía accidentalmente el mock
+- Qué pasó: el hook de las pruebas del resumen devolvía el mock por una flecha sin llaves; Vitest lo interpretó como una función de limpieza y lo invocó sin snapshot al terminar.
+- Cómo se detectó: tres pruebas fallaban en el mock con `snapshot.events` indefinido, aunque el handler recibía y procesaba correctamente los datos.
+- Cómo se corrigió: el hook usa un bloque sin valor de retorno y las pruebas se vuelven a ejecutar.
+- Lección / regla añadida: los hooks de preparación no deben devolver funciones salvo que se quiera registrar una limpieza explícita.
+
+## Error 20: ejemplo de salida no válido en el prompt del resumen
+- Qué pasó: el prompt mostraba un placeholder dentro de un array como si fuera JSON. La prueba real del modelo devolvió una selección con comillas mal formadas, que fue rechazada correctamente por el parser.
+- Cómo se detectó: el recorrido real respondió 503; un diagnóstico solo de formato y una prueba del ejemplo del prompt detectaron el problema, sin registrar motivos ni secretos.
+- Cómo se corrigió: el ejemplo se genera con JSON.stringify y un ID real del snapshot; además se solicita JSON Schema, comprobado con el endpoint real, porque JSON Object seguía devolviendo comillas incorrectas. La validación estricta de la respuesta se conserva.
+- Lección / regla añadida: probar que los ejemplos de salida sean JSON válido y verificar el prompt con el proveedor real, además de usar mocks.

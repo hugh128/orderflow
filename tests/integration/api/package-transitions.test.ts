@@ -11,7 +11,7 @@ import { queryLog, testSql as sql } from "../db";
 const handlers = { advance, reject };
 function call(kind: keyof typeof handlers, id: string, expectedStatus: string) {
   return handlers[kind](new Request(`http://localhost/api/packages/${id}/${kind}`, {
-    method: "POST", body: JSON.stringify({ expectedStatus }),
+    method: "POST", body: JSON.stringify({ expectedStatus, ...(kind === "reject" && { reason: "Revisar acabado" }) }),
   }), { params: Promise.resolve({ id }) });
 }
 async function fixture(status: PackageStatus = "pending") {

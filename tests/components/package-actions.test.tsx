@@ -21,10 +21,11 @@ describe("acciones de paquetes", () => {
     expect(screen.queryByRole("button", { name: "Rechazar paquete 2 a En proceso" }) !== null).toBe(canReject);
   });
 
-  it("CA-31: Listo muestra Completado sin acciones", () => {
+  it("CA-31: Listo muestra Completado sin acciones de transición", () => {
     row("done");
     expect(screen.getByText("Completado")).toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Avanzar|Rechazar/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ver historial del paquete 2" })).toBeEnabled();
   });
 
   it("T20: identifica el paquete y mantiene una región de anuncio antes de actuar", () => {
@@ -41,9 +42,15 @@ describe("acciones de paquetes", () => {
     const { client } = row("review");
     const invalidate = vi.spyOn(client, "invalidateQueries");
     fireEvent.click(screen.getByRole("button", { name: "Rechazar paquete 2 a En proceso" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar rechazo del paquete 2" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Motivo del rechazo del paquete 2")).toHaveAttribute("aria-invalid", "true");
+    fireEvent.change(screen.getByLabelText("Motivo del rechazo del paquete 2"), { target: { value: " Revisar acabado " } });
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar rechazo del paquete 2" }));
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Paquete 2 pasó a En proceso"));
     expect(fetchMock.mock.calls[0][0]).toBe(`/api/packages/${pkg.id}/reject`);
-    expect(JSON.parse(fetchMock.mock.calls[0][1]?.body as string)).toEqual({ expectedStatus: "review" });
+    expect(JSON.parse(fetchMock.mock.calls[0][1]?.body as string)).toEqual({ expectedStatus: "review", reason: "Revisar acabado" });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ["orders"] });
   });
 

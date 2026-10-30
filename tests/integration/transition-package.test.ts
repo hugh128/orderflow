@@ -38,7 +38,7 @@ describe("transitionPackage", () => {
 
   it("CA-19: rechazar En revisión devuelve En proceso y actualiza la fecha", async () => {
     const id = await fixture("review");
-    const result = await transitionPackage(id, "review", "reject");
+    const result = await transitionPackage(id, "review", "reject", "Revisar acabado");
     expect(result.status).toBe("in_progress");
     expect(result.updatedAt.getTime()).toBeGreaterThan(Date.parse("2000-01-01T00:00:00Z"));
     expect(await persisted(id)).toEqual({ status: result.status, updated_at: result.updatedAt });
@@ -51,7 +51,7 @@ describe("transitionPackage", () => {
       ["in_progress", "advance", "review"],
       ["review", "advance", "done"],
     ] as const) {
-      expect((await transitionPackage(id, from, kind)).status).toBe(to);
+      expect((await transitionPackage(id, from, kind, kind === "reject" ? "Revisar acabado" : undefined)).status).toBe(to);
       expect((await persisted(id)).status).toBe(to);
     }
   });

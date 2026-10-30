@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { check, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { check, index, integer, pgEnum, pgTable, serial, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 import { PACKAGE_STATUSES } from "../domain/types";
 
 export const packageStatus = pgEnum("package_status", PACKAGE_STATUSES);
@@ -15,6 +15,28 @@ export const orders = pgTable("orders", {
   check("orders_number_len", sql`length(btrim(${table.number})) BETWEEN 1 AND 30`),
   check("orders_customer_len", sql`length(btrim(${table.customer})) BETWEEN 1 AND 100`),
   check("orders_total_units_range", sql`${table.totalUnits} BETWEEN 1 AND 100000`),
+]).enableRLS();
+
+export const packageEvents = pgTable("package_events", {
+  id: serial("id").primaryKey(),
+  packageId: uuid("package_id").notNull().references(() => packages.id, { onDelete: "cascade" }),
+  fromStatus: packageStatus("from_status").notNull(),
+  toStatus: packageStatus("to_status").notNull(),
+  kind: text("kind").$type<"advance" | "reject">().notNull(),
+  reason: text("reason"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  index("package_events_package_id_idx").on(table.packageId, table.id),
+  check("package_events_transition", sql`(
+    ${table.kind} = 'advance' AND ${table.reason} IS NULL AND (
+      (${table.fromStatus} = 'pending' AND ${table.toStatus} = 'in_progress') OR
+      (${table.fromStatus} = 'in_progress' AND ${table.toStatus} = 'review') OR
+      (${table.fromStatus} = 'review' AND ${table.toStatus} = 'done')
+    )
+  ) OR (
+    ${table.kind} = 'reject' AND ${table.fromStatus} = 'review' AND ${table.toStatus} = 'in_progress'
+    AND ${table.reason} IS NOT NULL AND length(btrim(${table.reason})) BETWEEN 1 AND 300
+  )`),
 ]).enableRLS();
 
 export const packages = pgTable("packages", {

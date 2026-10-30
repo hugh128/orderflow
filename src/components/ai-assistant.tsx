@@ -3,6 +3,7 @@
 import { useRef, useState, type MouseEvent } from "react";
 import type { OrderDraft } from "@/lib/ai/parse-order";
 import { AiOrderBox } from "./ai-order-box";
+import { AiOrderSummary } from "./ai-order-summary";
 
 export function AiAssistant({ onDraft, disabled }: {
   onDraft: (draft: OrderDraft) => void | Promise<void>;
@@ -11,6 +12,7 @@ export function AiAssistant({ onDraft, disabled }: {
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<"prepare" | "summary">("prepare");
   const startedOutside = useRef(false);
 
   function closePanel() {
@@ -30,7 +32,7 @@ export function AiAssistant({ onDraft, disabled }: {
       aria-controls="order-assistant" aria-expanded={open} onClick={() => {
         dialog.current?.showModal();
         setOpen(true);
-        dialog.current?.querySelector("textarea")?.focus();
+        dialog.current?.querySelector<HTMLElement>(mode === "prepare" ? "textarea" : "select")?.focus();
       }}>
       <span className="assistant-spark" aria-hidden="true">✦</span>
       <strong>Asistente IA</strong>
@@ -47,15 +49,20 @@ export function AiAssistant({ onDraft, disabled }: {
         <button className="button assistant-close" type="button" aria-label="Cerrar asistente" onClick={closePanel}><span aria-hidden="true">×</span></button>
       </header>
       <div className="assistant-body">
-        <div className="assistant-intro"><span className="assistant-intro-icon" aria-hidden="true">✦</span>
-          <h3>Prepara tu próximo pedido</h3>
-          <p className="muted" id="assistant-description">Cuéntame el número, el cliente y la cantidad. Te propongo los datos para que los revises antes de guardar.</p>
+        <div className="assistant-modes" role="group" aria-label="Qué quieres hacer">
+          <button className="button" type="button" aria-pressed={mode === "prepare"} onClick={() => setMode("prepare")}>Preparar pedido</button>
+          <button className="button" type="button" aria-pressed={mode === "summary"} onClick={() => setMode("summary")}>Resumir pedido</button>
         </div>
-        <AiOrderBox disabled={disabled} onDraft={async (draft) => {
+        <div className="assistant-intro"><span className="assistant-intro-icon" aria-hidden="true">✦</span>
+          <h3>{mode === "prepare" ? "Prepara tu próximo pedido" : "Entiende el avance del pedido"}</h3>
+          <p className="muted" id="assistant-description">{mode === "prepare" ? "Cuéntame el número, el cliente y la cantidad. Te propongo los datos para que los revises antes de guardar." : "Selecciona un pedido para ver su estado actual y los movimientos relevantes del historial."}</p>
+        </div>
+        <div hidden={mode !== "prepare"}><AiOrderBox disabled={disabled} onDraft={async (draft) => {
           dialog.current?.close();
           await onDraft(draft);
-        }} />
-        <p className="assistant-footnote">Solo preparo pedidos. No consulto ni modifico los que ya existen.</p>
+        }} /></div>
+        <div hidden={mode !== "summary"}><AiOrderSummary active={mode === "summary"} /></div>
+        <p className="assistant-footnote">Preparo y resumo pedidos. No guardo ni cambio estados automáticamente.</p>
       </div>
     </dialog>
   </>;

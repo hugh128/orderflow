@@ -1,6 +1,8 @@
 # Orderflow
 
-Aplicación de seguimiento de pedidos por paquetes. T00–T20 implementadas: creación, consultas y acciones de paquetes, con validación, concurrencia y accesibilidad. La comprobación final del dominio público y la etiqueta de entrega mínima se realizarán después del merge de T19–T20.
+Aplicación de seguimiento de pedidos por paquetes, con validación, concurrencia, accesibilidad y asistente de IA. La entrega mínima y el extra de IA se validaron en producción y tienen las etiquetas `v0.1-minimo` y `v0.2-ia`.
+
+El extra de [historial y resumen asistido](docs/history-verification.md) registra cada cambio de estado de forma transaccional, exige motivo al rechazar y permite resumir un pedido desde el asistente. Su verificación pública se realiza después del merge.
 
 Aplicación publicada: https://orderflow-jet-ten.vercel.app
 

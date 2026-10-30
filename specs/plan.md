@@ -14,7 +14,7 @@ Next.js Route Handlers (/api/*)  ──►  src/lib/domain (funciones puras)
         ▼
 Drizzle ORM + postgres.js  ──►  Supabase PostgreSQL (pooler, puerto 6543)
         │
-        └─► Cloudflare Workers AI (Chat Completions) (solo /api/orders/parse, solo servidor)
+        └─► Cloudflare Workers AI (Chat Completions) (parser y resumen, solo servidor)
 ```
 
 - **Un solo proyecto Next.js (App Router)**, desplegado en Vercel. No hay backend separado ni Heroku.
@@ -78,7 +78,7 @@ Notas:
 
 - Cubre **CA-28**: duplicados, unidades fuera de 1–100 y estados fuera del enum los impide la BD.
 - **RLS:** en la migración, ejecutar `ALTER TABLE orders ENABLE ROW LEVEL SECURITY;` y lo mismo para `packages`, sin crear políticas. La app se conecta con el rol `postgres` (que ignora RLS), mientras que la API pública de Supabase queda sin acceso a las tablas. (Drizzle también ofrece `.enableRLS()` en la tabla; verificar contra la versión instalada.)
-- Opcional (spec §11): tabla `package_events (id, package_id, from_status, to_status, created_at)`. Solo si sobra tiempo.
+- Extra aprobado e implementado (ver `history.md`): `package_events` con ID serial, paquete, estados anterior/nuevo, operación, motivo y fecha; FK en cascada, RLS y checks de transición/motivo.
 
 ### 2.2 Conexión (`src/lib/db/client.ts`)
 
@@ -157,9 +157,11 @@ export const createOrderSchema = z.object({
 | `createOrderWithPackages(input)` | `db.transaction`: inserta el pedido, calcula `splitIntoPackages`, inserta los paquetes con `sequence` 1..n. Si el insert falla por `23505` lanza `DuplicateOrderNumberError`. (CA-01–06, 09, 10) |
 | `listOrders()` | Lee pedidos (más reciente primero) y todos sus paquetes en **2 consultas** (no N+1); arma `OrderSummary` con `computeProgress`. (CA-29) |
 | `getOrder(id)` | Pedido + paquetes ordenados por `sequence` + resumen. `null` si no existe. |
-| `transitionPackage(id, expected, kind)` | Ver §5.1. |
+| `transitionPackage(id, expected, kind, reason?)` | Ver §5.1 y `history.md`; motivo obligatorio para rechazos. |
 
 ### 5.1 Transición atómica
+
+Con el historial habilitado, la actualización condicional del siguiente fragmento y la inserción de su evento se ejecutan en una misma transacción. Si el evento falla se revierte todo. El motivo de rechazo se valida antes de abrir la transacción. Los conflictos no insertan eventos.
 
 ```ts
 // kind: "advance" | "reject"
@@ -200,8 +202,10 @@ type OrderDetailDTO = OrderDTO & { packages: PackageDTO[] };
 | `GET /api/orders` | | `200` `OrderDTO[]` | `500 INTERNAL` |
 | `GET /api/orders/:id` | | `200` `OrderDetailDTO` | `400` (id no es UUID), `404 NOT_FOUND` |
 | `POST /api/packages/:id/advance` | `{ expectedStatus }` | `200` `{ package: PackageDTO, order: OrderDTO }` | `400`, `404`, `409 INVALID_TRANSITION`, `409 STATUS_CONFLICT` |
-| `POST /api/packages/:id/reject` | `{ expectedStatus }` | `200` igual que arriba | `400`, `404`, `409 INVALID_TRANSITION`, `409 STATUS_CONFLICT` |
+| `POST /api/packages/:id/reject` | `{ expectedStatus, reason }` | `200` igual que arriba | `400`, `404`, `409 INVALID_TRANSITION`, `409 STATUS_CONFLICT` |
 | `POST /api/orders/parse` | `{ text }` | `200` `{ draft, issues }` (ver §8) | `400`, `429 AI_RATE_LIMITED`, `503 AI_UNAVAILABLE` |
+| `GET /api/packages/:id/history` | UUID en ruta | `200` últimos 50 eventos en orden ascendente | `400`, `404` |
+| `POST /api/orders/:id/summary` | UUID en ruta; sin cuerpo | `200` hechos del snapshot y eventos seleccionados (ver `history.md`) | `400`, `404`, `429`, `503` |
 
 - `INVALID_TRANSITION`: la transición no existe desde `expectedStatus` (ej. avanzar un paquete `done`, rechazar uno que no está en `review`).
 - `STATUS_CONFLICT`: la transición es válida, pero el estado real ya no es `expectedStatus`. La respuesta incluye `details.currentStatus` para que la UI se resincronice. (CA-33)

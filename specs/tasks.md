@@ -130,6 +130,8 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 7: Cierre
 
+- [x] **H01–H03 Extra aprobado: historial y resumen IA** — ejecutado según [history.md](history.md), CA-41 a CA-53. Migración aditiva aplicada a Supabase; revisión pública después del merge.
+
 - [x] **T23.2 Compactar acceso y cerrar al pulsar fuera (ajuste autorizado)** · **RNF-01 a 03**
   - Reducir el botón a una línea manteniendo un área de toque de 44 px como mínimo. Cierre exterior sin perder borrador; clics interiores y arrastres desde dentro conservan el panel abierto. (`fix(ui): compact assistant launcher and dismiss backdrop`)
 
