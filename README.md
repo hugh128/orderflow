@@ -1,6 +1,6 @@
 # Orderflow
 
-Aplicación de seguimiento de pedidos por paquetes. T00–T08 completadas: documentación SDD, esqueleto, CI, despliegue, dominio, validación y esquema PostgreSQL con migración aplicada a Supabase. El registro y seguimiento desde la interfaz todavía no están implementados.
+Aplicación de seguimiento de pedidos por paquetes. T00–T10 completadas: documentación SDD, esqueleto, CI, despliegue, dominio, validación y persistencia transaccional con transiciones atómicas sobre PostgreSQL. El registro y seguimiento desde la interfaz todavía no están implementados.
 
 Aplicación publicada: https://orderflow-jet-ten.vercel.app
 
@@ -42,5 +42,6 @@ Para una nueva BD de aplicación, configurar `DATABASE_URL_DIRECT` y ejecutar `c
 - `docs/deployment.md`: configuración y verificaciones de CI, Supabase y Vercel (T02).
 - `docs/domain-verification.md`: pruebas y mutaciones verificadas para T03–T06.
 - `docs/database-testing.md`: entorno local, seguridad de integración y migración de T07–T08.
+- `docs/concurrency-testing.md`: pruebas, concurrencia y mutaciones verificadas para T09–T10.
 
 Pendiente desde T11: consultas con resumen, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
