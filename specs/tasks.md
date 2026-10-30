@@ -123,7 +123,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [x] **T22 `POST /api/orders/parse`** ⏱ 25 min · Dep. T21 · **CA-36, 38, 40**
   - Pruebas: texto vacío o de más de 500 caracteres → 400 sin llamar al modelo; 11 solicitudes por minuto desde la misma IP → la 11.ª recibe 429; `AiUnavailableError` → 503; éxito → `{ draft, issues }`. Implementar el limitador en memoria (`src/lib/ai/rate-limit.ts`). (`feat(api): ai order parsing endpoint with rate limit`)
 
-- [ ] **T23 Caja de IA en la interfaz** ⏱ 25 min · Dep. T17, T22 · **CA-34, 35, 38**
+- [x] **T23 Caja de IA en la interfaz** ⏱ 25 min · Dep. T17, T22 · **CA-34, 35, 38**
   - `AiOrderBox`: textarea con contador (máx. 500), botón "Analizar", estado de carga; al recibir `draft` rellena el formulario **sin guardar**; muestra `issues`; en 503/429 muestra mensaje amable y el formulario manual sigue funcionando. Pruebas de componente con el endpoint simulado. (`feat(ui): ai order box`)
 
 ---
