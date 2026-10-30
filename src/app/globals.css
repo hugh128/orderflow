@@ -83,6 +83,11 @@ body {
 .order-detail { border-top: 1px solid var(--border); padding: 0.25rem 1.5rem; }
 .package-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: center; padding: 0.875rem 0; border-bottom: 1px solid var(--border); }
 .package-row:last-child { border: 0; }
+.package-actions { display: flex; justify-content: flex-end; gap: 0.5rem; grid-column: 1 / -1; }
+.package-feedback { grid-column: 1 / -1; font-size: 0.8125rem; color: var(--muted); }
+.package-feedback:has(p:empty):not(:has(button)) { display: none; }
+.package-feedback .button { margin-top: 0.5rem; }
+.completed { color: var(--accent); font-size: 0.8125rem; font-weight: 600; }
 .package-sequence { font-size: 0.8125rem; font-weight: 600; }
 .status-badge { display: inline-flex; gap: 0.375rem; align-items: center; font-size: 0.6875rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: #f0f2ed; color: #4f5b54; }
 .status-badge.in_progress { background: #edf4f9; color: #245c83; }

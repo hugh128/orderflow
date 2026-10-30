@@ -69,3 +69,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: la suite completa falló con «No QueryClient set»; las pruebas de los componentes nuevos sí tenían su proveedor.
 - Cómo se corrigió: la prueba de página monta Providers y simula una lista vacía mediante fetch, conservando su comprobación del título.
 - Lección / regla añadida: al integrar componentes en una página, actualizar también su prueba de composición para reflejar los proveedores que aporta el layout real.
+
+## Error 11: comprobar el refetch antes de la notificación de React Query
+- Qué pasó: la prueba de transición resolvía la respuesta del listado y comprobaba inmediatamente el DOM, sin esperar la notificación asíncrona de React Query.
+- Cómo se detectó: los dos casos de éxito y conflicto todavía observaban 0 % cuando esperaban 40 %, aunque la respuesta controlada ya estaba resuelta.
+- Cómo se corrigió: se espera con waitFor al porcentaje del listado y luego se comprueba que los botones siguen bloqueados mientras el detalle continúa pendiente.
+- Lección / regla añadida: resolver una promesa de fetch no equivale a que el observador haya renderizado sus datos; esperar señales visibles sin eliminar las comprobaciones del intervalo pendiente.
