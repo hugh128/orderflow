@@ -85,7 +85,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [x] **T14 `GET /api/orders` y `GET /api/orders/:id`** ⏱ 15 min · Dep. T11, T12 · **CA-29, 30**
   - Pruebas: lista vacía → `[]`; orden y resumen correctos; detalle 200; id no UUID → 400; inexistente → 404. (`feat(api): list and detail endpoints`)
 
-- [ ] **T15 `POST /api/packages/:id/advance` y `/reject`** ⏱ 25 min · Dep. T10, T12 · **CA-13 a 21, 33**
+- [x] **T15 `POST /api/packages/:id/advance` y `/reject`** ⏱ 25 min · Dep. T10, T12 · **CA-13 a 21, 33**
   - Pruebas: avance/rechazo OK devuelven paquete + pedido actualizado (con nuevo avance); falta `expectedStatus` o valor inválido → 400; `INVALID_TRANSITION`; `STATUS_CONFLICT` con `currentStatus`; 404; doble petición simultánea → 200 + 409. (`feat(api): advance and reject package endpoints`)
 
 ---
