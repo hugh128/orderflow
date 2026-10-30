@@ -130,6 +130,9 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 7: Cierre
 
+- [ ] **T23.1 Asistente flotante (ajuste de UX autorizado)** · **CA-34, 35, 38; RNF-01 a 03**
+  - Botón flotante reconocible «Asistente IA», diálogo modal adaptable, propuesta visible y aplicación explícita con «Usar estos datos». Cierre/Escape, foco y borrador conservado. Pruebas antes de implementar y revisión real en escritorio/móvil. (`feat(ui): floating AI order assistant`)
+
 - [ ] **T24 Prueba e2e (opcional)** ⏱ 25 min · Dep. T20
   - Playwright: crear pedido de 250 → ver 3 paquetes y 0 % → avanzar uno hasta `done` → ver 40 % → rechazar uno desde `review` → recargar y comprobar persistencia. (`test(e2e): happy path`)
 
