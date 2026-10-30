@@ -141,13 +141,15 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [ ] **T24 Prueba e2e (opcional)** ⏱ 25 min · Dep. T20
   - Playwright: crear pedido de 250 → ver 3 paquetes y 0 % → avanzar uno hasta `done` → ver 40 % → rechazar uno desde `review` → recargar y comprobar persistencia. (`test(e2e): happy path`)
 
-- [ ] **T25 README** ⏱ 25 min · Dep. todas
+- [x] **T25 README** ⏱ 25 min · Dep. todas
   - Contenido obligatorio: descripción, **instalación** (requisitos, `pnpm install`, `.env`, migraciones, `pnpm dev`), cómo correr pruebas, enlace a la app publicada, estructura `specs/`, decisiones clave, **un error del agente de IA y cómo se corrigió** (tomado de `docs/agent-errors.md`), limitaciones conocidas (p. ej. límite por IP en memoria) y **pendientes**.
   - (`docs: add readme`)
 
 - [ ] **T26 Prueba de humo en producción** ⏱ 15 min · Dep. T20 (y T23 si se hizo)
   - Con la URL de Vercel: crear pedido de 250 unidades, probar duplicado, avanzar/rechazar/completar, recargar. Si hay IA: probar una frase real y una con intento de inyección.
   - Verificar: repo público, CI en verde, `.env.example` sin secretos, historial con specs antes del código.
+
+> Cierre autorizado por el candidato: T24 se omite y T26 no se repite. Las verificaciones de producción ya realizadas se recopilan en [docs/delivery.md](../docs/delivery.md). T27 conserva el envío pendiente a cargo del candidato.
 
 - [ ] **T27 Envío** ⏱ 5 min
   - Responder al correo (dentro de las 24 h) con: link de la app publicada y link del repo.
