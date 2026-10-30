@@ -43,4 +43,4 @@ Para una nueva BD de aplicación, configurar `DATABASE_URL_DIRECT` y ejecutar `c
 - `docs/domain-verification.md`: pruebas y mutaciones verificadas para T03–T06.
 - `docs/database-testing.md`: entorno local, seguridad de integración y migración de T07–T08.
 
-Pendiente desde T09: operaciones de persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
+Pendiente desde T11: consultas con resumen, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
