@@ -20,7 +20,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - Scripts en `package.json`: `lint`, `typecheck`, `test`, `db:generate`, `db:migrate`. `.env.example` según plan §10.
   - Configurar también `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event` y `jsdom` para las pruebas de componente. Fijar `packageManager` con la versión de pnpm utilizada para CI. Una prueba inicial de Vitest que verifique la configuración. (`chore: scaffold next app with tooling`)
 
-- [ ] **T02 CI y despliegue temprano** ⏱ 20 min · Dep. T01
+- [x] **T02 CI y despliegue temprano** ⏱ 20 min · Dep. T01
   - Añadir `.github/workflows/ci.yml` (plan §9). Importar el repo en Vercel y crear el proyecto de Supabase; configurar variables de entorno.
   - Hecho cuando: CI en verde y la URL de Vercel muestra la página inicial. (`ci: add github actions workflow`)
 
