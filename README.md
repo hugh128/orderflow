@@ -1,6 +1,6 @@
 # Orderflow
 
-Aplicación de seguimiento de pedidos por paquetes. T00–T06 completadas: documentación SDD, esqueleto, CI, despliegue conectado a Supabase y lógica de dominio probada. El registro y seguimiento desde la interfaz todavía no están implementados.
+Aplicación de seguimiento de pedidos por paquetes. T00–T08 completadas: documentación SDD, esqueleto, CI, despliegue, dominio, validación y esquema PostgreSQL con migración aplicada a Supabase. El registro y seguimiento desde la interfaz todavía no están implementados.
 
 Aplicación publicada: https://orderflow-jet-ten.vercel.app
 
@@ -28,7 +28,9 @@ corepack pnpm build
 
 `typecheck` genera los tipos de rutas de Next.js antes de ejecutar TypeScript, por lo que funciona desde un checkout limpio. Vitest usa Node por defecto; las pruebas de componentes seleccionan jsdom mediante `@vitest-environment jsdom`.
 
-Los scripts `db:generate` y `db:migrate` están preparados; el esquema y las migraciones se implementarán en T08.
+`pnpm test` incluye integración y necesita PostgreSQL local. Para ejecutar solo unitarias sin BD: `corepack pnpm test:unit`. Para preparar el contenedor de pruebas y `TEST_DATABASE_URL`, seguir [la guía de BD y pruebas](docs/database-testing.md).
+
+Para una nueva BD de aplicación, configurar `DATABASE_URL_DIRECT` y ejecutar `corepack pnpm db:migrate`. Las migraciones se versionan en `drizzle/`; no usar la BD de producción para las pruebas.
 
 ## Documentación y pendientes
 
@@ -39,5 +41,6 @@ Los scripts `db:generate` y `db:migrate` están preparados; el esquema y las mig
 - `docs/agent-errors.md`: errores detectados y correcciones.
 - `docs/deployment.md`: configuración y verificaciones de CI, Supabase y Vercel (T02).
 - `docs/domain-verification.md`: pruebas y mutaciones verificadas para T03–T06.
+- `docs/database-testing.md`: entorno local, seguridad de integración y migración de T07–T08.
 
-Pendiente desde T07: validación con Zod, persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
+Pendiente desde T09: operaciones de persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.

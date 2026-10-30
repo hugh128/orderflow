@@ -47,7 +47,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 2: Validación
 
-- [ ] **T07 Esquema de creación de pedido** ⏱ 20 min · Dep. T03 · **CA-07, 08, 11**
+- [x] **T07 Esquema de creación de pedido** ⏱ 20 min · Dep. T03 · **CA-07, 08, 11**
   - Pruebas en tabla. Rechazar: `0`, `-5`, `10.5`, `""`, `"abc"`, `"1e2"`, `"  "`, `null`, `NaN`, `Infinity`, `100001`; número/cliente vacíos o solo espacios; número > 30 caracteres. Aceptar: `1`, `"250"`, `" 250 "`, `100000`; número con espacios extremos queda recortado.
   - Implementar `createOrderSchema` con mensajes en español. (`feat(schemas): add create order schema`)
 
@@ -55,7 +55,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 3: Persistencia
 
-- [ ] **T08 Esquema de BD y migración** ⏱ 25 min · Dep. T01 · **CA-28**
+- [x] **T08 Esquema de BD y migración** ⏱ 25 min · Dep. T01 · **CA-28**
   - Escribir `src/lib/db/schema.ts` (plan §2.1) y `client.ts`. Generar migración y añadir `ENABLE ROW LEVEL SECURITY` en ambas tablas. Configurar BD de pruebas y un `setup` de Vitest que migre y limpie (`TRUNCATE`) entre pruebas.
   - Pruebas de integración directas con SQL: insertar número duplicado con distinta capitalización o espacios extremos falla; paquete con 0 o 101 unidades falla; `sequence` repetido en un pedido falla; estado fuera del enum falla.
   - Aplicar la migración a Supabase. (`feat(db): add schema, migration and constraints`)
