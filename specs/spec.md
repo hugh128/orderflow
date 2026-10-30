@@ -155,5 +155,6 @@ Autenticación, edición o eliminación de pedidos, deshacer cambios de estado, 
 ## 11. Mejoras opcionales (solo si sobra tiempo)
 
 - Historial de cambios de estado por paquete (`package_events`) con marca de tiempo y registro de rechazos.
+  - Extra aprobado para implementación: alcance, motivos obligatorios y CA-41 a CA-53 en [history.md](history.md).
 - Filtro de pedidos por estado o búsqueda por número o cliente.
 - Prueba e2e con Playwright del flujo completo.
