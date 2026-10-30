@@ -106,7 +106,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - `PackageRow` con `Avanzar` (no en `done`) y `Rechazar` (solo en `review`); envía `expectedStatus`; deshabilita mientras la mutación está en curso; invalida `["orders"]` al terminar; ante cualquier error (409, red, etc.) muestra mensaje y resincroniza; si la red sigue caída, ofrece reintento.
   - Pruebas de componente: botones visibles según estado; mensaje en conflicto. (`feat(ui): package actions`)
 
-- [ ] **T20 Pulido de UX y accesibilidad** ⏱ 20 min · Dep. T17–T19
+- [x] **T20 Pulido de UX y accesibilidad** ⏱ 20 min · Dep. T17–T19
   - Responsive en móvil, `aria-live` para resultados, estados no solo por color, foco visible, textos en español. Revisión manual con teclado. (`style(ui): responsive and accessibility pass`)
 
 > **Punto de corte:** al terminar T20 la entrega mínima está completa. Desplegar, probar en producción y asegurar que el correo se pueda enviar con esto aunque lo demás falle.
