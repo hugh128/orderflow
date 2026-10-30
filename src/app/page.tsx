@@ -1,18 +1,21 @@
+import { OrderForm } from "@/components/order-form";
+import { OrderList } from "@/components/order-list";
+
 export default function Home() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-16">
-      <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-emerald-800">
-        Orderflow
-      </p>
-      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-        Seguimiento de pedidos
-      </h1>
-      <p className="mt-4 max-w-xl text-lg leading-8 text-zinc-700">
-        Registra pedidos y sigue el avance de sus paquetes en un solo lugar.
-      </p>
-      <p className="mt-8 border-t border-zinc-200 pt-6 text-sm text-zinc-600">
-        Estamos preparando la aplicación.
-      </p>
-    </main>
+    <>
+      <a className="skip-link" href="#main">Ir al contenido</a>
+      <header className="site-header"><div className="header-inner">
+        <div className="brand"><span className="brand-mark" aria-hidden="true">O</span>Orderflow</div>
+        <span className="header-caption">Pedidos · Paquetes · Avance</span>
+      </div></header>
+      <main id="main" className="page-shell">
+        <div className="page-heading"><p className="eyebrow">Tu operación, en orden</p>
+          <h1>Seguimiento de pedidos</h1><p className="muted">Registra un pedido y consulta el avance de cada paquete, en un solo lugar.</p>
+        </div>
+        <div className="workspace"><aside><OrderForm /></aside><OrderList /></div>
+        <footer className="page-footer">Orderflow <span>El avance se calcula por unidades listas.</span></footer>
+      </main>
+    </>
   );
 }
