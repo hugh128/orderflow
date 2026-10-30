@@ -5,6 +5,8 @@ import { useForm } from "@tanstack/react-form";
 import { useCreateOrder } from "@/hooks/use-create-order";
 import { ApiError } from "@/lib/api/client";
 import { createOrderSchema } from "@/lib/schemas/order";
+import { AiOrderBox } from "./ai-order-box";
+import type { OrderDraft } from "@/lib/ai/parse-order";
 
 const fields = [
   { name: "number", label: "Número de pedido", placeholder: "Ej. A-1042" },
@@ -76,6 +78,24 @@ export function OrderForm() {
     },
   });
 
+  async function applyDraft(draft: OrderDraft) {
+    if (submitting.current || mutation.isPending) return;
+    setServerErrors({});
+    setMessage("");
+    setSuccess(false);
+    for (const { name } of fields) {
+      const value = draft[name];
+      if (value !== undefined) form.setFieldValue(name, String(value));
+    }
+    await form.validateAllFields("change");
+    const parsed = createOrderSchema.safeParse(form.state.values);
+    const firstInvalid = parsed.success ? undefined : parsed.error.issues[0]?.path[0];
+    const control = firstInvalid
+      ? formElement.current?.elements.namedItem(String(firstInvalid))
+      : formElement.current?.querySelector('button[type="submit"]');
+    if (control instanceof HTMLElement) control.focus();
+  }
+
   return (
     <section className="panel" aria-labelledby="create-title">
       <div className="panel-heading">
@@ -83,6 +103,7 @@ export function OrderForm() {
         <h2 id="create-title">Nuevo pedido</h2>
         <p className="muted">Los paquetes se generan automáticamente, hasta 100 unidades por paquete.</p>
       </div>
+      <AiOrderBox onDraft={applyDraft} disabled={mutation.isPending} />
       <form ref={formElement} aria-label="Crear pedido" noValidate onSubmit={(event) => {
         event.preventDefault();
         if (!submitting.current) void form.handleSubmit();
