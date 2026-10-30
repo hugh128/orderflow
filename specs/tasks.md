@@ -115,7 +115,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 6: Extra IA
 
-- [ ] **T21 Parser de pedidos con IA** ⏱ 35 min · Dep. T07 · **CA-34, 35, 37, 38, 39**
+- [x] **T21 Parser de pedidos con IA** ⏱ 35 min · Dep. T07 · **CA-34, 35, 37, 38, 39**
   - Instalar `openai` como cliente de Cloudflare Workers AI; usar Chat Completions con JSON Mode según plan §8 y configurar `CLOUDFLARE_ACCOUNT_ID`/`CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_MODEL`. Implementar `parseOrderFromText(text, client)` con el cliente **inyectable** para poder simularlo. Cubrir también ausencia de modelo, rechazo del proveedor, respuesta incompleta y JSON inválido con `AiUnavailableError`.
   - Pruebas con cliente simulado: salida válida → `draft` completo; campo `null` → omitido + `issue`; unidades `1000000` (inyección) → rechazadas por Zod, no aparecen en `draft`; unidades como string numérico → aceptadas; error/timeout del proveedor → `AiUnavailableError`; sin API key → `AiUnavailableError`; el texto del usuario va dentro de `<texto_pedido>`.
   - (`feat(ai): parse order text with structured output`)
