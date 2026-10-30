@@ -28,18 +28,18 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 1: Dominio puro (sin BD)
 
-- [ ] **T03 Constantes y tipos de dominio** ⏱ 5 min · Dep. T01
+- [x] **T03 Constantes y tipos de dominio** ⏱ 5 min · Dep. T01
   - `src/lib/domain/types.ts`: `PACKAGE_STATUSES`, `PackageStatus`, `MAX_PACKAGE_UNITS`, `MAX_ORDER_UNITS`. (`feat(domain): add domain types and constants`)
 
-- [ ] **T04 División en paquetes** ⏱ 15 min · Dep. T03 · **CA-01, 02, 03, 04, 05**
+- [x] **T04 División en paquetes** ⏱ 15 min · Dep. T03 · **CA-01, 02, 03, 04, 05**
   - Pruebas: 250 → [100,100,50]; 100 → [100]; 101 → [100,1]; 1 → [1]; 200 → [100,100]; 100 000 → 1 000 paquetes de 100; suma = N; entradas inválidas (0, -1, 1.5, NaN, 100 001) lanzan `RangeError`.
   - Implementar `splitIntoPackages`. (`feat(domain): split orders into packages`)
 
-- [ ] **T05 Máquina de estados** ⏱ 20 min · Dep. T03 · **CA-13 a 17, 19, 20, 21**
+- [x] **T05 Máquina de estados** ⏱ 20 min · Dep. T03 · **CA-13 a 17, 19, 20, 21**
   - Pruebas: las 3 transiciones de avance; `done` no avanza; las 13 combinaciones inválidas de avance/salto lanzan `InvalidTransitionError`; `reject` solo desde `review` → `in_progress`; `reject` desde los otros 3 estados lanza error; ciclo rechazo → avance de nuevo hasta `done`.
   - Implementar `nextStatus`, `advance`, `reject`, `InvalidTransitionError`. (`feat(domain): add package state machine`)
 
-- [ ] **T06 Cálculo de avance** ⏱ 20 min · Dep. T03 · **CA-22, 23, 24, 25, 26**
+- [x] **T06 Cálculo de avance** ⏱ 20 min · Dep. T03 · **CA-22, 23, 24, 25, 26**
   - Pruebas: 250 con un 100 listo → 40; 250 con el de 50 listo → 20; todos listos → 100; ninguno listo → 0 y conteos suman el total; 300 (100/100/100) con uno listo → 33; 99 999 de 100 000 → 99 (nunca 100); lista vacía → 0 sin error; los 4 estados siempre presentes en `counts`.
   - Implementar `computeProgress`. (`feat(domain): compute order progress by ready units`)
 

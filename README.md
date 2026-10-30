@@ -1,6 +1,6 @@
 # Orderflow
 
-Aplicación de seguimiento de pedidos por paquetes. T00–T02 completadas: documentación SDD, esqueleto, CI y despliegue conectado a Supabase. Las funciones de pedidos todavía no están implementadas.
+Aplicación de seguimiento de pedidos por paquetes. T00–T06 completadas: documentación SDD, esqueleto, CI, despliegue conectado a Supabase y lógica de dominio probada. El registro y seguimiento desde la interfaz todavía no están implementados.
 
 Aplicación publicada: https://orderflow-jet-ten.vercel.app
 
@@ -38,5 +38,6 @@ Los scripts `db:generate` y `db:migrate` están preparados; el esquema y las mig
 - `specs/tasks.md`: tareas y avance.
 - `docs/agent-errors.md`: errores detectados y correcciones.
 - `docs/deployment.md`: configuración y verificaciones de CI, Supabase y Vercel (T02).
+- `docs/domain-verification.md`: pruebas y mutaciones verificadas para T03–T06.
 
-Pendiente desde T03: dominio, persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
+Pendiente desde T07: validación con Zod, persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final se completará en T25.
