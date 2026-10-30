@@ -105,3 +105,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: la revisión del commit mostró texto como «Configuraci?n» y T21 aún mencionaba Responses API.
 - Cómo se corrigió: se corrigió el texto con parches UTF-8 y se revisaron las referencias al proveedor antes de implementar.
 - Lección / regla añadida: usar parches para texto Unicode y comprobar el diff de documentación antes de dar por aplicada una sustitución.
+
+## Error 17: cursor de espera sin análisis en curso
+- Qué pasó: el estilo general de botones deshabilitados usaba `cursor: wait`, incluso en Analizar cuando el texto estaba vacío.
+- Cómo se detectó: el usuario observó el indicador de carga al hacer hover; el navegador confirmó botón deshabilitado y cursor `wait` sin petición activa.
+- Cómo se corrigió: los botones deshabilitados de la caja de IA usan flecha cuando `aria-busy` es falso. Durante el análisis se conserva el cursor de espera.
+- Lección / regla añadida: deshabilitado y ocupado son estados distintos; comprobar el cursor tanto con campos vacíos como con una petición pendiente.
