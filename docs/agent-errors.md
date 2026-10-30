@@ -129,3 +129,15 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: el recorrido real respondió 503; un diagnóstico solo de formato y una prueba del ejemplo del prompt detectaron el problema, sin registrar motivos ni secretos.
 - Cómo se corrigió: el ejemplo se genera con JSON.stringify y un ID real del snapshot; además se solicita JSON Schema, comprobado con el endpoint real, porque JSON Object seguía devolviendo comillas incorrectas. La validación estricta de la respuesta se conserva.
 - Lección / regla añadida: probar que los ejemplos de salida sean JSON válido y verificar el prompt con el proveedor real, además de usar mocks.
+
+## Error 21: sustitución de color que afectó su propia variable
+- Qué pasó: al reemplazar colores fijos por variables para el modo oscuro, una sustitución también cambió la definición de --badge-done-background a una referencia a sí misma en el tema claro.
+- Cómo se detectó: revisión del CSS antes del build; la definición era circular y dejaría sin resolver el fondo de Listo y del icono del asistente en claro.
+- Cómo se corrigió: restaurar el valor literal de la definición y conservar referencias solo en consumidores; revisar ambos temas en navegador.
+- Lección / regla añadida: limitar las sustituciones a reglas consumidoras y revisar las declaraciones de variables después.
+
+## Error 22: entorno de pruebas sin matchMedia al añadir ThemeProvider
+- Qué pasó: integré next-themes pero no preparé matchMedia en el setup compartido de jsdom; las pruebas nuevas lo simulaban solo dentro de su archivo.
+- Cómo se detectó: la suite completa falló en providers.test.tsx y smoke.test.tsx con window.matchMedia is not a function; los navegadores reales sí ofrecen esa API.
+- Cómo se corrigió: añadir un sustituto mínimo de matchMedia exclusivamente al entorno de pruebas cuando no existe; conservar las pruebas con el proveedor real.
+- Lección / regla añadida: al añadir un proveedor global, revisar todas las pruebas que montan el layout y preparar las APIs del navegador ausentes en jsdom, sin simular el proveedor completo.

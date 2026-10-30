@@ -18,6 +18,7 @@ Captura de la aplicación local con datos de ejemplo. La IA propone; el usuario 
 - Consultar historial con fecha, estados y motivos de rechazo.
 - Usar el **Asistente IA** para preparar un pedido desde una frase o resumir los movimientos de un pedido existente.
 - Trabajar desde móvil y con teclado, con foco visible, mensajes en español y estados expresados con texto.
+- Elegir tema **Sistema, Claro u Oscuro** desde la cabecera; la preferencia se conserva al recargar.
 
 <details>
 <summary>Capturas: escritorio, asistente, historial y móvil</summary>
@@ -26,13 +27,14 @@ Captura de la aplicación local con datos de ejemplo. La IA propone; el usuario 
 ![Propuesta del asistente](docs/media/orderflow-assistant.png)
 ![Historial de un paquete](docs/media/orderflow-history.png)
 ![Resumen asistido](docs/media/orderflow-summary.png)
+![Modo oscuro](docs/media/orderflow-dark.png)
 <img src="docs/media/orderflow-mobile.png" alt="Orderflow a 375 píxeles de ancho" width="375">
 
 </details>
 
 ## Stack
 
-Next.js 16 (App Router), React 19, TypeScript estricto, Tailwind CSS 4, Zod 4, TanStack Query y Form, Drizzle ORM, postgres.js, PostgreSQL, Vitest y Testing Library. Producción en **Vercel + Supabase**; IA en **Cloudflare Workers AI** mediante su endpoint compatible con OpenAI.
+Next.js 16 (App Router), React 19, TypeScript estricto, Tailwind CSS 4, next-themes, Zod 4, TanStack Query y Form, Drizzle ORM, postgres.js, PostgreSQL, Vitest y Testing Library. Producción en **Vercel + Supabase**; IA en **Cloudflare Workers AI** mediante su endpoint compatible con OpenAI.
 
 El paquete `openai` se usa como cliente HTTP compatible: **no requiere cuenta, API key ni créditos de OpenAI**.
 
@@ -96,7 +98,7 @@ corepack pnpm test
 corepack pnpm build
 ```
 
-La última validación funcional completa registró **411 pruebas aprobadas**. Vitest separa unitarias en Node, componentes en jsdom e integración en PostgreSQL. El setup aplica migraciones y ejecuta integración en serie; aborta si falta `TEST_DATABASE_URL`, coincide con la conexión de la aplicación o apunta a Supabase. Las pruebas de concurrencia utilizan varias conexiones reales.
+La última validación funcional completa registró **414 pruebas aprobadas**. Vitest separa unitarias en Node, componentes en jsdom e integración en PostgreSQL. El setup aplica migraciones y ejecuta integración en serie; aborta si falta `TEST_DATABASE_URL`, coincide con la conexión de la aplicación o apunta a Supabase. Las pruebas de concurrencia utilizan varias conexiones reales.
 
 Sin base de datos puedes ejecutar:
 
@@ -119,6 +121,7 @@ Claude ayudó a preparar las especificaciones y guías iniciales; Codex implemen
 | [spec.md](specs/spec.md) | Requisitos y CA-01 a CA-40 |
 | [plan.md](specs/plan.md) | Arquitectura y contratos |
 | [history.md](specs/history.md) | Extra aprobado: historial y resumen, CA-41 a CA-53 |
+| [theme.md](specs/theme.md) | Extra aprobado: temas claro, oscuro y del sistema, CA-54 a CA-56 |
 | [tasks.md](specs/tasks.md) | Tareas y estado |
 | [AGENTS.md](AGENTS.md) y [CLAUDE.md](CLAUDE.md) | Instrucciones para agentes |
 
@@ -178,4 +181,4 @@ src/components/    Interfaz y asistente
 tests/             Unitarias, componentes e integración
 ```
 
-[Concurrencia](docs/concurrency-testing.md) · [API](docs/endpoints-verification.md) · [Accesibilidad](docs/actions-accessibility-verification.md) · [Asistente flotante](docs/floating-assistant-verification.md) · [Historial y resumen](docs/history-verification.md) · [Cierre](docs/delivery.md)
+[Concurrencia](docs/concurrency-testing.md) · [API](docs/endpoints-verification.md) · [Accesibilidad](docs/actions-accessibility-verification.md) · [Asistente flotante](docs/floating-assistant-verification.md) · [Historial y resumen](docs/history-verification.md) · [Temas](docs/theme-verification.md) · [Cierre](docs/delivery.md)
