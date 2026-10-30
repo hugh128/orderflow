@@ -23,3 +23,10 @@ Se utiliza [`dialog.showModal()`](https://developer.mozilla.org/en-US/docs/Web/A
 - Lighthouse de la página con el botón flotante: accesibilidad 100/100, sin auditorías fallidas.
 
 La comprobación con Cloudflare real usó frases sintéticas y la BD local `orders_dev`; no se guardaron pedidos ni se modificó producción. La revisión interactiva del dominio público se realiza después del merge, conservando la protección de los previews.
+
+## Ajuste T23.2 solicitado después de la revisión visual
+
+- Botón de una línea, sin subtítulo, icono de 20 px y área de toque de 48 px. Medición real: aproximadamente 127×48 px tanto en escritorio como a 375 px de ancho.
+- Un clic iniciado y terminado fuera de los límites del diálogo cierra el panel y devuelve el foco al botón. Comprobar las coordenadas evita cerrar al pulsar el borde interior; comprobar dónde empezó evita cerrar al arrastrar desde dentro.
+- La nueva prueba falló antes de la implementación. Después pasan las once pruebas del asistente y las 380 de la suite, además de lint, tipos y build.
+- Navegador real: clic interior conserva el panel abierto, clic exterior lo cierra, foco restaurado y borrador conservado al reabrir. Cierre exterior verificado también a 375×812. No se llamó a la IA ni se guardaron pedidos durante esta comprobación.

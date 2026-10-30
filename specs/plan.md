@@ -248,6 +248,8 @@ La entrada de IA será un botón flotante «Asistente IA». Abre un diálogo mod
 
 ### 8.1 Flujo
 
+Ajuste posterior solicitado por el usuario: botón flotante compacto, de una línea y al menos 44 px de alto. El clic/tap iniciado y terminado fuera de los límites del panel también lo cierra, conservando texto y propuesta y devolviendo el foco al botón. Los clics interiores y los arrastres iniciados dentro no lo cierran.
+
 ```
 Usuario escribe texto ──► POST /api/orders/parse
    1. valida text (1–500 caracteres)                        (CA-36)

@@ -166,4 +166,30 @@ describe("T23.1: asistente flotante y aplicación de propuestas", () => {
     expect(screen.getByRole("button", { name: "Usar estos datos" })).toBeVisible();
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
+
+  it("RNF-03: solo cierra con clic exterior completo y conserva el borrador", async () => {
+    renderWithQuery(<OrderForm />);
+    const user = userEvent.setup();
+    const launcher = screen.getByRole("button", { name: "Asistente IA" });
+    await user.click(launcher);
+    const dialog = screen.getByRole("dialog", { name: "Asistente IA" });
+    const input = screen.getByRole("textbox", { name: /Describe el pedido/ });
+    await user.type(input, "Mi borrador");
+    vi.spyOn(dialog, "getBoundingClientRect").mockReturnValue(new DOMRect(200, 100, 300, 500));
+    function down(x: number, y: number) {
+      fireEvent(dialog, new MouseEvent("pointerdown", { bubbles: true, clientX: x, clientY: y }));
+    }
+    down(220, 120);
+    fireEvent.click(dialog, { clientX: 220, clientY: 120 });
+    expect(dialog).toHaveAttribute("open");
+    down(220, 120);
+    fireEvent.click(dialog, { clientX: 20, clientY: 20 });
+    expect(dialog).toHaveAttribute("open");
+    down(20, 20);
+    fireEvent.click(dialog, { clientX: 20, clientY: 20 });
+    expect(dialog).not.toHaveAttribute("open");
+    expect(launcher).toHaveFocus();
+    await user.click(launcher);
+    expect(input).toHaveValue("Mi borrador");
+  });
 });

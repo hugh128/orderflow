@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import type { OrderDraft } from "@/lib/ai/parse-order";
 import { AiOrderBox } from "./ai-order-box";
 
@@ -11,6 +11,19 @@ export function AiAssistant({ onDraft, disabled }: {
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const startedOutside = useRef(false);
+
+  function closePanel() {
+    dialog.current?.close();
+    launcher.current?.focus();
+  }
+
+  function isOutside(event: MouseEvent<HTMLDialogElement>) {
+    if (event.target !== event.currentTarget) return false;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    return event.clientX < bounds.left || event.clientX > bounds.right
+      || event.clientY < bounds.top || event.clientY > bounds.bottom;
+  }
 
   return <>
     <button ref={launcher} type="button" className="assistant-launcher" aria-haspopup="dialog"
@@ -20,16 +33,18 @@ export function AiAssistant({ onDraft, disabled }: {
         dialog.current?.querySelector("textarea")?.focus();
       }}>
       <span className="assistant-spark" aria-hidden="true">✦</span>
-      <span><strong>Asistente IA</strong><small aria-hidden="true">Te ayudo a preparar un pedido</small></span>
+      <strong>Asistente IA</strong>
     </button>
     <dialog ref={dialog} id="order-assistant" className="assistant-dialog" aria-labelledby="assistant-title"
-      aria-describedby="assistant-description" onClose={() => setOpen(false)}>
+      aria-describedby="assistant-description" onClose={() => setOpen(false)}
+      onPointerDown={(event) => { startedOutside.current = isOutside(event); }}
+      onClick={(event) => {
+        if (startedOutside.current && isOutside(event)) closePanel();
+        startedOutside.current = false;
+      }}>
       <header className="assistant-heading">
         <div><p className="eyebrow">Orderflow · IA</p><h2 id="assistant-title">Asistente IA</h2></div>
-        <button className="button assistant-close" type="button" aria-label="Cerrar asistente" onClick={() => {
-          dialog.current?.close();
-          launcher.current?.focus();
-        }}><span aria-hidden="true">×</span></button>
+        <button className="button assistant-close" type="button" aria-label="Cerrar asistente" onClick={closePanel}><span aria-hidden="true">×</span></button>
       </header>
       <div className="assistant-body">
         <div className="assistant-intro"><span className="assistant-intro-icon" aria-hidden="true">✦</span>

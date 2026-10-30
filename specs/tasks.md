@@ -130,6 +130,9 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 7: Cierre
 
+- [x] **T23.2 Compactar acceso y cerrar al pulsar fuera (ajuste autorizado)** · **RNF-01 a 03**
+  - Reducir el botón a una línea manteniendo un área de toque de 44 px como mínimo. Cierre exterior sin perder borrador; clics interiores y arrastres desde dentro conservan el panel abierto. (`fix(ui): compact assistant launcher and dismiss backdrop`)
+
 - [x] **T23.1 Asistente flotante (ajuste de UX autorizado)** · **CA-34, 35, 38; RNF-01 a 03**
   - Botón flotante reconocible «Asistente IA», diálogo modal adaptable, propuesta visible y aplicación explícita con «Usar estos datos». Cierre/Escape, foco y borrador conservado. Pruebas antes de implementar y revisión real en escritorio/móvil. (`feat(ui): floating AI order assistant`)
 
