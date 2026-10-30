@@ -38,9 +38,23 @@ Referencia: [integración de Vercel con GitHub](https://vercel.com/docs/git/verc
 
 ## Evidencias para cerrar T02
 
-- [ ] GitHub Actions en verde para el commit del PR.
-- [ ] `DATABASE_URL` comprobada localmente con `SELECT 1`.
-- [ ] `DATABASE_URL_DIRECT` comprobada localmente con `SELECT 1`.
-- [ ] URL pública de Vercel accesible y `/api/health` con HTTP 200.
+- [x] GitHub Actions en verde para el commit del PR y para `main` después del merge.
+- [x] `DATABASE_URL` comprobada localmente con `SELECT 1` (`ok=1`).
+- [x] `DATABASE_URL_DIRECT` comprobada localmente con `SELECT 1` (`ok=1`).
+- [x] URL pública de Vercel accesible y `/api/health` con HTTP 200 y `{ "ok": true }`.
 
-T02 permanece pendiente hasta completar estas verificaciones. No ejecutar aún migraciones: el esquema pertenece a T08.
+T02 completada. No se ejecutaron migraciones: el esquema pertenece a T08.
+
+### Recursos y evidencia
+
+- Aplicación: https://orderflow-jet-ten.vercel.app
+- Diagnóstico temporal: https://orderflow-jet-ten.vercel.app/api/health
+- Supabase: proyecto `orderflow` en `happy-endurance`, región `us-east-1` (Virginia); costo cotizado al crearlo: $0/mes.
+- Vercel: `harold128oth-gmailcoms-projects/orderflow`, vinculado a `hugh128/orderflow`; funciones en `iad1`.
+- Commit desplegado y verificado: `3ad01c990eb66eb994b8754186e284df41ee52bc`.
+- Despliegue verificado: `dpl_H3AH9oko1C1mPijFaGm6p377vMBq`, estado `READY`.
+- CI de `main`: https://github.com/hugh128/orderflow/actions/runs/40989819251
+- Comprobaciones locales: lint, typecheck y cinco pruebas correctas; ambas conexiones devolvieron `ok=1`.
+- Producción usa `DATABASE_URL` como variable sensible. `DATABASE_URL_DIRECT` permanece local.
+- Standard Protection autorizada por el propietario: el dominio principal de producción es público; los previews y las URL individuales de despliegue permanecen protegidos.
+- Preview/Development aún no tienen conexión a BD; antes de usarlos para probar persistencia se debe configurar una base separada en T08. Las cinco pruebas actuales simulan el proveedor de BD y no necesitan credenciales reales.
