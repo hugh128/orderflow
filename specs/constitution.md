@@ -31,7 +31,7 @@ Aplicación web para registrar pedidos y dar seguimiento a su avance por paquete
 | ORM / migraciones | Drizzle ORM + drizzle-kit |
 | Base de datos | PostgreSQL (Supabase, vía connection pooler) |
 | Pruebas | Vitest (unitarias e integración); Playwright opcional (e2e) |
-| IA (extra) | API de OpenAI (Responses API), solo desde el servidor |
+| IA (extra) | Cloudflare Workers AI (Chat Completions compatible con OpenAI), solo desde el servidor |
 | CI | GitHub Actions (lint, typecheck, test) |
 | Despliegue | Vercel (app) + Supabase (BD) |
 

@@ -48,4 +48,4 @@ Para una nueva BD de aplicación, configurar `DATABASE_URL_DIRECT` y ejecutar `c
 - `docs/ui-verification.md`: formulario, consultas de interfaz y revisión en navegador de T16–T18.
 - `docs/actions-accessibility-verification.md`: acciones, foco, móvil y Lighthouse de T19–T20.
 
-Pendiente desde T21: extra de IA con OpenAI y cierre de la entrega. El listado no tiene paginación y el detalle renderiza hasta 1 000 paquetes a la vez; con mayor volumen habrá que limitar los resultados. El README final se completará en T25.
+T21 añade el parser con Cloudflare Workers AI; su configuración, prueba manual y límites están en [la verificación del parser](docs/ai-parser-verification.md). Pendientes desde T22: endpoint de IA, caja en la interfaz y cierre de la entrega. El listado no tiene paginación y el detalle renderiza hasta 1 000 paquetes a la vez; con mayor volumen habrá que limitar los resultados. El README final se completará en T25.
