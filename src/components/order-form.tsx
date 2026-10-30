@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useCreateOrder } from "@/hooks/use-create-order";
 import { ApiError } from "@/lib/api/client";
@@ -28,23 +28,33 @@ function validateOrder({ value }: { value: Record<FieldName, string> }) {
 export function OrderForm() {
   const mutation = useCreateOrder();
   const submitting = useRef(false);
+  const formElement = useRef<HTMLFormElement>(null);
+  const firstInput = useRef<HTMLInputElement>(null);
+  const restoreFocus = useRef(false);
   const [serverErrors, setServerErrors] = useState<FieldErrors>({});
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    if (!success || mutation.isPending || !restoreFocus.current) return;
+    restoreFocus.current = false;
+    if (document.activeElement === document.body || formElement.current?.contains(document.activeElement)) firstInput.current?.focus();
+  }, [success, mutation.isPending]);
   const form = useForm({
     defaultValues: { number: "", customer: "", units: "" },
     validators: { onChange: validateOrder, onSubmit: validateOrder },
     onSubmit: async ({ value, formApi }) => {
       if (submitting.current) return;
+      restoreFocus.current = Boolean(formElement.current?.contains(document.activeElement));
       submitting.current = true;
       setServerErrors({});
       setMessage("");
       setSuccess(false);
       try {
-        await mutation.mutateAsync(createOrderSchema.parse(value));
+        const created = await mutation.mutateAsync(createOrderSchema.parse(value));
         formApi.reset();
         setSuccess(true);
-        setMessage("Pedido creado correctamente");
+        const count = created.summary.totalPackages;
+        setMessage(`Pedido ${created.number} creado con ${count} ${count === 1 ? "paquete" : "paquetes"}`);
       } catch (error) {
         if (error instanceof ApiError && error.code === "DUPLICATE_ORDER_NUMBER") {
           setServerErrors({ number: [error.message] });
@@ -73,7 +83,7 @@ export function OrderForm() {
         <h2 id="create-title">Nuevo pedido</h2>
         <p className="muted">Los paquetes se generan automáticamente, hasta 100 unidades por paquete.</p>
       </div>
-      <form aria-label="Crear pedido" noValidate onSubmit={(event) => {
+      <form ref={formElement} aria-label="Crear pedido" noValidate onSubmit={(event) => {
         event.preventDefault();
         if (!submitting.current) void form.handleSubmit();
       }}>
@@ -87,7 +97,7 @@ export function OrderForm() {
                 return (
                   <div className="field">
                     <label htmlFor={`order-${name}`}>{label}</label>
-                    <input id={`order-${name}`} name={name} type="text" inputMode={name === "units" ? "numeric" : "text"}
+                    <input ref={name === "number" ? firstInput : undefined} id={`order-${name}`} name={name} type="text" inputMode={name === "units" ? "numeric" : "text"}
                       placeholder={placeholder} value={field.state.value} disabled={mutation.isPending}
                       aria-invalid={errors.length > 0} aria-describedby={errors.length ? errorId : undefined}
                       onBlur={field.handleBlur} onChange={(event) => {
@@ -107,7 +117,8 @@ export function OrderForm() {
             {isSubmitting || mutation.isPending ? "Guardando…" : "Guardar pedido"}
           </button>}
         </form.Subscribe>
-        {message && <p className={success ? "success-message" : "field-error"} role={success ? "status" : "alert"}>{message}</p>}
+        <p className="success-message" role="status" aria-live="polite" aria-atomic="true">{success ? message : ""}</p>
+        {message && !success && <p className="field-error" role="alert">{message}</p>}
       </form>
     </section>
   );

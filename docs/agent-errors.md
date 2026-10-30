@@ -81,3 +81,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: las pruebas de éxito y conflicto completaban la sincronización, pero la fila Listo no conservaba el foco. La traza mostró primero review con pending=false y después done.
 - Cómo se corrigió: la intención se mantiene hasta observar el cambio de estado en el DOM, sin recuperar foco si el usuario ya se movió fuera de la fila.
 - Lección / regla añadida: la finalización de una promesa de datos y el render de sus consumidores son momentos distintos; verificar el foco después de retirar controles, no solo al resolver la petición.
+
+## Error 13: pérdida de foco al terminar la creación
+- Qué pasó: el botón Guardar se deshabilitaba durante el envío y el foco no volvía a un control al finalizar.
+- Cómo se detectó: en el recorrido real solo con teclado, se creó el pedido correctamente, pero document.activeElement terminó en body.
+- Cómo se corrigió: después del éxito se enfoca Número de pedido, siempre que el usuario no se haya movido fuera del formulario durante la petición. Se añadió una aserción de foco a la prueba del envío.
+- Lección / regla añadida: verificar también el foco tras deshabilitar y rehabilitar controles, no solo tras eliminarlos del DOM.
