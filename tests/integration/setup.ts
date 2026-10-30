@@ -1,5 +1,12 @@
-import { afterAll, beforeEach } from "vitest";
-import { resetDb, testSql } from "./db";
+import { afterAll, beforeEach, vi } from "vitest";
+import { resetDb, repoSql, testSql } from "./db";
+
+vi.mock("@/lib/db/client", async () => {
+  const { testDb, repoSql } = await import("./db");
+  return { db: testDb, sql: repoSql };
+});
 
 beforeEach(resetDb);
-afterAll(() => testSql.end({ timeout: 1 }));
+afterAll(async () => {
+  await Promise.all([testSql.end({ timeout: 1 }), repoSql.end({ timeout: 1 })]);
+});
