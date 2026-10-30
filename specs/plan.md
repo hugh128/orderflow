@@ -256,12 +256,12 @@ Cliente ──► rellena OrderForm (editable) ──► usuario revisa y pulsa 
 
 ### 8.2 Integración (`src/lib/ai/parse-order.ts`)
 
-- SDK `openai` como cliente compatible de Cloudflare, solo en el servidor, con `timeout: 15_000` y `maxRetries: 0`. No usa cr?ditos ni credenciales de OpenAI.
-- Configuraci?n expl?cita: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_MODEL`. Endpoint fijo `https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1`.
+- SDK `openai` como cliente compatible de Cloudflare, solo en el servidor, con `timeout: 15_000` y `maxRetries: 0`. No usa créditos ni credenciales de OpenAI.
+- Configuración explícita: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_MODEL`. Endpoint fijo `https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1`.
 - Modelo verificado: `@cf/meta/llama-3.3-70b-instruct-fp8-fast`. El modelo se lee de la variable, sin valor predeterminado.
-- Usar `client.chat.completions.create`, `stream: false`, `max_tokens: 300`, `temperature: 0` y `response_format: { type: "json_object" }`. El prompt especifica el esquema JSON: `number`, `customer` y `units`, requeridos y anulables; no inventar campos. Los dos primeros admiten string o null; `units`, n?mero o null (un decimal se rechaza despu?s por campo).
-- JSON Mode no equivale a Structured Outputs estricto: validar la forma del objeto y despu?s cada campo con el ?nico esquema Zod. Un campo inv?lido no descarta los otros campos v?lidos.
-- Rechazos, truncamiento (`finish_reason` distinto de `stop`), ausencia de contenido, JSON inv?lido o respuesta que no es objeto ? `AiUnavailableError`, sin detalles del proveedor.
+- Usar `client.chat.completions.create`, `stream: false`, `max_tokens: 300`, `temperature: 0` y `response_format: { type: "json_object" }`. El prompt especifica el esquema JSON: `number`, `customer` y `units`, requeridos y anulables; no inventar campos. Los dos primeros admiten string o null; `units`, número o null (un decimal se rechaza después por campo).
+- JSON Mode no equivale a Structured Outputs estricto: validar la forma del objeto y después cada campo con el único esquema Zod. Un campo inválido no descarta los otros campos válidos.
+- Rechazos, truncamiento (`finish_reason` distinto de `stop`), ausencia de contenido, JSON inválido o respuesta que no es objeto → `AiUnavailableError`, sin detalles del proveedor.
 - Referencias oficiales: https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/ y https://developers.cloudflare.com/workers-ai/features/json-mode/
 - **Prompt de sistema (esquema):**
   - Rol: extractor de datos de pedidos; el texto del usuario va entre `<texto_pedido>` y `</texto_pedido>`.
@@ -269,7 +269,7 @@ Cliente ──► rellena OrderForm (editable) ──► usuario revisa y pulsa 
   - "Si un campo no aparece o es ambiguo, devuelve `null`. No inventes valores."
   - "Convierte cantidades escritas con palabras a número (ej. 'doscientas cincuenta' → 250)."
   - Un par de ejemplos breves en español.
-- Antes de delimitar el texto, eliminar sus ocurrencias de `<texto_pedido>` y `</texto_pedido>` (tambi?n con diferencias de may?sculas). El texto original nunca se inserta en el mensaje de sistema.
+- Antes de delimitar el texto, eliminar sus ocurrencias de `<texto_pedido>` y `</texto_pedido>` (también con diferencias de mayúsculas). El texto original nunca se inserta en el mensaje de sistema.
 - **Post-procesado:** cada campo de la salida se valida por separado con las piezas de `createOrderSchema` (`.shape.number`, etc.). Los campos válidos van a `draft`; los inválidos o `null` se omiten y se agrega una entrada en `issues` (ej. `{ field: "units", message: "..." }`). Así, un valor absurdo producto de una inyección (CA-39) nunca llega al formulario.
 - **Límite por IP:** ventana deslizante en memoria, 10 solicitudes por minuto por IP (`x-forwarded-for`). Es "mejor esfuerzo" en serverless (cada instancia tiene su propio contador); la limitación queda documentada en el README. Alternativa si sobra tiempo: Upstash Redis.
 - **Degradación (CA-38):** sin cualquiera de las tres variables de Cloudflare, timeout o error del proveedor → `503 AI_UNAVAILABLE` con mensaje amable. La UI de la caja IA muestra el error y el formulario manual sigue operativo. Si no hay key, la caja puede ocultarse o deshabilitarse (endpoint opcional `GET /api/orders/parse` no necesario: basta con manejar el 503).
@@ -357,6 +357,6 @@ CLOUDFLARE_MODEL=
 | Inyección de prompt altera valores | Texto tratado como datos + validación Zod de la salida |
 | Se acaba el tiempo | Orden de tareas con corte claro: la IA (T21–T23) es lo primero que se recorta |
 
-### Decisi?n de proveedor de IA (T21)
+### Decisión de proveedor de IA (T21)
 
-Cambio autorizado por el usuario: Workers AI permite utilizar la cuota gratuita sin cr?ditos de OpenAI. Workers Free incluye 10 000 neuronas al d?a; al agotarlas el asistente puede fallar y la creaci?n manual permanece disponible. Workers Paid puede cobrar excedentes. No se garantiza una cantidad fija de solicitudes. Ver https://developers.cloudflare.com/workers-ai/platform/pricing/.
+Cambio autorizado por el usuario: Workers AI permite utilizar la cuota gratuita sin créditos de OpenAI. Workers Free incluye 10 000 neuronas al día; al agotarlas el asistente puede fallar y la creación manual permanece disponible. Workers Paid puede cobrar excedentes. No se garantiza una cantidad fija de solicitudes. Ver https://developers.cloudflare.com/workers-ai/platform/pricing/.

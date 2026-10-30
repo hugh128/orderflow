@@ -99,3 +99,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: una prueba con POST 409 y ambos GET fallidos conservó el estado Pendiente, pero recibió el mensaje de actualización exitosa.
 - Cómo se corrigió: se comprueba si las consultas activas de pedidos terminaron en error. Se informa de la vista pendiente de sincronizar y el reintento vuelve a leer sin reenviar el POST; al recuperar la red confirma Vista actualizada.
 - Lección / regla añadida: no confundir la finalización de la invalidación con una lectura exitosa; probar también el fallo de red después de un conflicto.
+
+## Error 16: pérdida de acentos al editar documentación desde PowerShell
+- Qué pasó: una edición de plan.md mediante Python por stdin convirtió caracteres acentuados nuevos en signos de interrogación; una sustitución de tasks.md tampoco coincidió.
+- Cómo se detectó: la revisión del commit mostró texto como «Configuraci?n» y T21 aún mencionaba Responses API.
+- Cómo se corrigió: se corrigió el texto con parches UTF-8 y se revisaron las referencias al proveedor antes de implementar.
+- Lección / regla añadida: usar parches para texto Unicode y comprobar el diff de documentación antes de dar por aplicada una sustitución.
