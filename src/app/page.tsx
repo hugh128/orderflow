@@ -1,5 +1,6 @@
 import { OrderForm } from "@/components/order-form";
 import { OrderList } from "@/components/order-list";
+import { ThemeSwitch } from "@/components/theme-switch";
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <a className="skip-link" href="#main">Ir al contenido</a>
       <header className="site-header"><div className="header-inner">
         <div className="brand"><span className="brand-mark" aria-hidden="true">O</span>Orderflow</div>
-        <span className="header-caption">Pedidos · Paquetes · Avance</span>
+        <div className="header-actions"><span className="header-caption">Pedidos · Paquetes · Avance</span><ThemeSwitch /></div>
       </div></header>
       <main id="main" className="page-shell">
         <div className="page-heading"><p className="eyebrow">Tu operación, en orden</p>
