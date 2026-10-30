@@ -130,6 +130,8 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 7: Cierre
 
+- [x] **T29 Favicon de Orderflow (ajuste visual aprobado)**. Sustituir el icono de plantilla por la «O» blanca sobre el verde de la marca, en formato ICO con tamaños de 16, 32, 48 y 64 px. Comprobar el archivo, el enlace generado por Next.js y su respuesta HTTP. Sin nuevas dependencias ni cambios funcionales.
+
 - [x] **T28 Modo oscuro (extra aprobado)** · **CA-54 a CA-56**, según [theme.md](theme.md). `next-themes`, selector Sistema/Claro/Oscuro, preferencia persistente, contraste y montaje sin desajustes de hidratación.
 
 - [x] **H01–H03 Extra aprobado: historial y resumen IA** — ejecutado según [history.md](history.md), CA-41 a CA-53. Migración aditiva aplicada a Supabase; revisión pública después del merge.
