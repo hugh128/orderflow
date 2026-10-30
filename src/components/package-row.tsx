@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTransition } from "@/hooks/use-transition";
 import { ApiError } from "@/lib/api/client";
 import { nextStatus } from "@/lib/domain/package-status";
@@ -11,14 +11,31 @@ import { StatusBadge } from "./status-badge";
 export function PackageRow({ pkg }: { pkg: PackageDTO }) {
   const mutation = useTransition();
   const locked = useRef(false);
+  const row = useRef<HTMLLIElement>(null);
+  const restoreFocus = useRef(false);
+  const originStatus = useRef(pkg.status);
   const [message, setMessage] = useState("");
   const [failed, setFailed] = useState(false);
   const [synchronizing, setSynchronizing] = useState(false);
   const to = nextStatus(pkg.status);
   const pending = mutation.isPending || synchronizing;
 
+  useEffect(() => {
+    if (pending || !restoreFocus.current) return;
+    if (document.activeElement !== document.body && !row.current?.contains(document.activeElement)) {
+      restoreFocus.current = false;
+      return;
+    }
+    const control = row.current?.querySelector<HTMLButtonElement>(".package-actions button:not(:disabled)");
+    (control ?? row.current)?.focus();
+    // El observador puede renderizar el nuevo DTO después de resolver la mutación.
+    if (pkg.status !== originStatus.current) restoreFocus.current = false;
+  }, [pending, pkg.status]);
+
   async function transition(kind: "advance" | "reject") {
     if (locked.current) return;
+    restoreFocus.current = Boolean(row.current?.contains(document.activeElement));
+    originStatus.current = pkg.status;
     locked.current = true;
     setMessage("");
     setFailed(false);
@@ -41,7 +58,7 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
     finally { locked.current = false; setSynchronizing(false); }
   }
 
-  return <li className="package-row">
+  return <li className="package-row" ref={row} tabIndex={-1} aria-label={`Paquete ${pkg.sequence}, ${STATUS_LABELS[pkg.status]}`}>
     <span className="package-sequence">Paquete {pkg.sequence}</span>
     <span className="muted">{pkg.units} unidades</span>
     <StatusBadge status={pkg.status} />

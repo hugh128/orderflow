@@ -27,6 +27,15 @@ describe("acciones de paquetes", () => {
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
+  it("T20: identifica el paquete y mantiene una región de anuncio antes de actuar", () => {
+    row("review");
+    const item = screen.getByRole("listitem", { name: "Paquete 2, Revisión" });
+    expect(within(item).getByRole("status")).toHaveAttribute("aria-live", "polite");
+    expect(within(item).getByRole("status")).toHaveAttribute("aria-atomic", "true");
+    expect(within(item).getByRole("status")).toBeEmptyDOMElement();
+    expect(within(item).getByText("Revisión")).toBeInTheDocument();
+  });
+
   it("CA-19/CA-21: rechaza con expectedStatus de la pantalla", async () => {
     fetchMock.mockResolvedValue(Response.json({ package: { ...pkg, status: "in_progress" }, order }));
     const { client } = row("review");
@@ -97,6 +106,7 @@ describe("acciones de paquetes", () => {
     renderWithQuery(<OrderList />);
     fireEvent.click(await screen.findByRole("button", { name: "Ver paquetes de A-1" }));
     const button = await screen.findByRole("button", { name: "Avanzar paquete 1 a Listo" });
+    button.focus();
     fireEvent.click(button);
     await waitFor(() => expect(listCount).toBe(2));
     await waitFor(() => expect(detailCount).toBe(2));
@@ -113,5 +123,6 @@ describe("acciones de paquetes", () => {
     await waitFor(() => expect(within(firstRow).getByRole("status")).toHaveTextContent(conflict
       ? "El paquete ya había cambiado de estado; se actualizó la vista"
       : "Paquete 1 pasó a Listo"));
+    await waitFor(() => expect(firstRow).toHaveFocus());
   });
 });

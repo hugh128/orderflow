@@ -75,3 +75,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: los dos casos de éxito y conflicto todavía observaban 0 % cuando esperaban 40 %, aunque la respuesta controlada ya estaba resuelta.
 - Cómo se corrigió: se espera con waitFor al porcentaje del listado y luego se comprueba que los botones siguen bloqueados mientras el detalle continúa pendiente.
 - Lección / regla añadida: resolver una promesa de fetch no equivale a que el observador haya renderizado sus datos; esperar señales visibles sin eliminar las comprobaciones del intervalo pendiente.
+
+## Error 12: restaurar el foco antes del render del nuevo estado
+- Qué pasó: al añadir recuperación de foco, consumí la intención cuando terminó la mutación, antes de que React Query renderizara el paquete actualizado. Si el nuevo estado era Listo, el botón enfocado desaparecía después y el foco acababa en body.
+- Cómo se detectó: las pruebas de éxito y conflicto completaban la sincronización, pero la fila Listo no conservaba el foco. La traza mostró primero review con pending=false y después done.
+- Cómo se corrigió: la intención se mantiene hasta observar el cambio de estado en el DOM, sin recuperar foco si el usuario ya se movió fuera de la fila.
+- Lección / regla añadida: la finalización de una promesa de datos y el render de sus consumidores son momentos distintos; verificar el foco después de retirar controles, no solo al resolver la petición.
