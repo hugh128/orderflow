@@ -3,10 +3,28 @@ import { errorResponse, handleError } from "@/lib/api/errors";
 import { DuplicateOrderNumberError, NotFoundError, StatusConflictError } from "@/lib/db/errors";
 import { InvalidTransitionError } from "@/lib/domain/package-status";
 import { createOrderSchema } from "@/lib/schemas/order";
+import { AiRateLimitError, AiUnavailableError } from "@/lib/ai/errors";
 
 afterEach(() => vi.restoreAllMocks());
 
 describe("handleError", () => {
+  it("CA-38: IA no disponible produce 503 sin detalles del proveedor", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    const response = handleError(new AiUnavailableError());
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ error: { code: "AI_UNAVAILABLE",
+      message: "El asistente no está disponible; puedes crear el pedido manualmente" } });
+    expect(log).not.toHaveBeenCalled();
+  });
+
+  it("CA-40: límite de IA produce 429 con Retry-After", async () => {
+    const response = handleError(new AiRateLimitError(17));
+    expect(response.status).toBe(429);
+    expect(response.headers.get("retry-after")).toBe("17");
+    expect(await response.json()).toEqual({ error: { code: "AI_RATE_LIMITED",
+      message: "Has alcanzado el límite de análisis; inténtalo de nuevo en un momento" } });
+  });
+
   it("CA-07: ZodError real produce 400 con mensajes por campo", async () => {
     const parsed = createOrderSchema.safeParse({ number: "A-1", customer: "Sol", units: 0 });
     expect(parsed.success).toBe(false);

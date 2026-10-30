@@ -120,7 +120,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - Pruebas con cliente simulado: salida válida → `draft` completo; campo `null` → omitido + `issue`; unidades `1000000` (inyección) → rechazadas por Zod, no aparecen en `draft`; unidades como string numérico → aceptadas; error/timeout del proveedor → `AiUnavailableError`; sin API key → `AiUnavailableError`; el texto del usuario va dentro de `<texto_pedido>`.
   - (`feat(ai): parse order text with structured output`)
 
-- [ ] **T22 `POST /api/orders/parse`** ⏱ 25 min · Dep. T21 · **CA-36, 38, 40**
+- [x] **T22 `POST /api/orders/parse`** ⏱ 25 min · Dep. T21 · **CA-36, 38, 40**
   - Pruebas: texto vacío o de más de 500 caracteres → 400 sin llamar al modelo; 11 solicitudes por minuto desde la misma IP → la 11.ª recibe 429; `AiUnavailableError` → 503; éxito → `{ draft, issues }`. Implementar el limitador en memoria (`src/lib/ai/rate-limit.ts`). (`feat(api): ai order parsing endpoint with rate limit`)
 
 - [ ] **T23 Caja de IA en la interfaz** ⏱ 25 min · Dep. T17, T22 · **CA-34, 35, 38**
