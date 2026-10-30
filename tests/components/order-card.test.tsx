@@ -32,7 +32,7 @@ describe("OrderCard", () => {
   it("CA-30: no pide detalle colapsado; expandir muestra paquetes con unidades y estado", async () => {
     fetchMock.mockResolvedValue(Response.json(order));
     renderWithQuery(<OrderCard order={order} />);
-    const button = screen.getByRole("button", { name: "Ver paquetes de A-1" });
+    const button = screen.getByRole("button", { name: "Ver paquetes 3 del pedido A-1" });
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(fetchMock).not.toHaveBeenCalled();
     fireEvent.click(button);
@@ -50,7 +50,7 @@ describe("OrderCard", () => {
   it("CA-30: error de detalle muestra reintento y recupera los paquetes", async () => {
     fetchMock.mockRejectedValueOnce(new TypeError("offline")).mockResolvedValueOnce(Response.json(order));
     renderWithQuery(<OrderCard order={order} />);
-    fireEvent.click(screen.getByRole("button", { name: "Ver paquetes de A-1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ver paquetes 3 del pedido A-1" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("No se pudo conectar");
     fireEvent.click(screen.getByRole("button", { name: "Reintentar detalle" }));
     await waitFor(() => expect(screen.getByText("Paquete 1")).toBeInTheDocument());

@@ -69,3 +69,33 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: la suite completa falló con «No QueryClient set»; las pruebas de los componentes nuevos sí tenían su proveedor.
 - Cómo se corrigió: la prueba de página monta Providers y simula una lista vacía mediante fetch, conservando su comprobación del título.
 - Lección / regla añadida: al integrar componentes en una página, actualizar también su prueba de composición para reflejar los proveedores que aporta el layout real.
+
+## Error 11: comprobar el refetch antes de la notificación de React Query
+- Qué pasó: la prueba de transición resolvía la respuesta del listado y comprobaba inmediatamente el DOM, sin esperar la notificación asíncrona de React Query.
+- Cómo se detectó: los dos casos de éxito y conflicto todavía observaban 0 % cuando esperaban 40 %, aunque la respuesta controlada ya estaba resuelta.
+- Cómo se corrigió: se espera con waitFor al porcentaje del listado y luego se comprueba que los botones siguen bloqueados mientras el detalle continúa pendiente.
+- Lección / regla añadida: resolver una promesa de fetch no equivale a que el observador haya renderizado sus datos; esperar señales visibles sin eliminar las comprobaciones del intervalo pendiente.
+
+## Error 12: restaurar el foco antes del render del nuevo estado
+- Qué pasó: al añadir recuperación de foco, consumí la intención cuando terminó la mutación, antes de que React Query renderizara el paquete actualizado. Si el nuevo estado era Listo, el botón enfocado desaparecía después y el foco acababa en body.
+- Cómo se detectó: las pruebas de éxito y conflicto completaban la sincronización, pero la fila Listo no conservaba el foco. La traza mostró primero review con pending=false y después done.
+- Cómo se corrigió: la intención se mantiene hasta observar el cambio de estado en el DOM, sin recuperar foco si el usuario ya se movió fuera de la fila.
+- Lección / regla añadida: la finalización de una promesa de datos y el render de sus consumidores son momentos distintos; verificar el foco después de retirar controles, no solo al resolver la petición.
+
+## Error 13: pérdida de foco al terminar la creación
+- Qué pasó: el botón Guardar se deshabilitaba durante el envío y el foco no volvía a un control al finalizar.
+- Cómo se detectó: en el recorrido real solo con teclado, se creó el pedido correctamente, pero document.activeElement terminó en body.
+- Cómo se corrigió: después del éxito se enfoca Número de pedido, siempre que el usuario no se haya movido fuera del formulario durante la petición. Se añadió una aserción de foco a la prueba del envío.
+- Lección / regla añadida: verificar también el foco tras deshabilitar y rehabilitar controles, no solo tras eliminarlos del DOM.
+
+## Error 14: nombre accesible del detalle sin el contador visible
+- Qué pasó: el botón mostraba «Ver paquetes» y su cantidad, pero aria-label incluía el número del pedido sin esa cantidad.
+- Cómo se detectó: Lighthouse con tarjetas y 1 000 paquetes expandidos reportó label-content-name-mismatch en los tres botones de detalle, aunque la puntuación de categoría era 100.
+- Cómo se corrigió: el texto visible lleva un espacio antes del contador y el nombre accesible incluye ese mismo texto y el identificador del pedido.
+- Lección / regla añadida: revisar los hallazgos individuales de la auditoría y auditar estados con datos; una puntuación alta en una página vacía no cubre sus controles dinámicos.
+
+## Error 15: confirmar sincronización aunque el refetch había fallado
+- Qué pasó: tras STATUS_CONFLICT mostraba «se actualizó la vista» aunque los GET posteriores fallaran por red. invalidateQueries no rechaza por defecto esos fallos de lectura.
+- Cómo se detectó: una prueba con POST 409 y ambos GET fallidos conservó el estado Pendiente, pero recibió el mensaje de actualización exitosa.
+- Cómo se corrigió: se comprueba si las consultas activas de pedidos terminaron en error. Se informa de la vista pendiente de sincronizar y el reintento vuelve a leer sin reenviar el POST; al recuperar la red confirma Vista actualizada.
+- Lección / regla añadida: no confundir la finalización de la invalidación con una lectura exitosa; probar también el fallo de red después de un conflicto.

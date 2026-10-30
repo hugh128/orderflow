@@ -75,6 +75,8 @@ describe("OrderForm", () => {
     fetchMock.mockReturnValue(new Promise<Response>((done) => { resolve = done; }));
     const { client } = renderWithQuery(<OrderForm />);
     const invalidate = vi.spyOn(client, "invalidateQueries");
+    expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
     await fill("250", " A-1 ", " Textiles Sol ");
     const form = screen.getByRole("form", { name: "Crear pedido" });
     fireEvent.submit(form);
@@ -90,7 +92,9 @@ describe("OrderForm", () => {
     expect(screen.getByLabelText("Cliente")).toHaveValue("");
     expect(screen.getByLabelText("Cantidad de unidades")).toHaveValue("");
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ["orders"] });
-    expect(screen.getByRole("status")).toHaveTextContent("Pedido creado correctamente");
+    expect(screen.getByRole("status")).toHaveTextContent("Pedido A-1 creado con 3 paquetes");
+    expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
+    await waitFor(() => expect(screen.getByLabelText("Número de pedido")).toHaveFocus());
   });
 
   it("T17: un fallo de red conserva los datos y muestra un mensaje en español", async () => {
@@ -100,5 +104,18 @@ describe("OrderForm", () => {
     await user.click(screen.getByRole("button", { name: "Guardar pedido" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("No se pudo conectar con el servidor");
     expect(screen.getByLabelText("Número de pedido")).toHaveValue("A-1");
+  });
+
+  it("T20: no roba el foco si el usuario sale del formulario mientras se guarda", async () => {
+    let resolve!: (response: Response) => void;
+    fetchMock.mockReturnValue(new Promise<Response>((done) => { resolve = done; }));
+    renderWithQuery(<><OrderForm /><button>Otra sección</button></>);
+    const user = await fill();
+    await user.click(screen.getByRole("button", { name: "Guardar pedido" }));
+    const outside = screen.getByRole("button", { name: "Otra sección" });
+    await user.click(outside);
+    await act(async () => resolve(Response.json(order, { status: 201 })));
+    await waitFor(() => expect(screen.getByLabelText("Número de pedido")).toHaveValue(""));
+    expect(outside).toHaveFocus();
   });
 });

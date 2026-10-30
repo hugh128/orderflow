@@ -1,6 +1,6 @@
 # Orderflow
 
-Aplicación de seguimiento de pedidos por paquetes. T00–T18 completadas: backend, formulario de creación, lista con resúmenes y detalle de paquetes. Las acciones sobre paquetes desde la interfaz se implementarán en T19.
+Aplicación de seguimiento de pedidos por paquetes. T00–T20 implementadas: creación, consultas y acciones de paquetes, con validación, concurrencia y accesibilidad. La comprobación final del dominio público y la etiqueta de entrega mínima se realizarán después del merge de T19–T20.
 
 Aplicación publicada: https://orderflow-jet-ten.vercel.app
 
@@ -46,5 +46,6 @@ Para una nueva BD de aplicación, configurar `DATABASE_URL_DIRECT` y ejecutar `c
 - `docs/queries-api-verification.md`: consultas, DTO y mapeo de errores de T11–T12.
 - `docs/endpoints-verification.md`: endpoints, aislamiento de pruebas y flujo HTTP de T13–T15.
 - `docs/ui-verification.md`: formulario, consultas de interfaz y revisión en navegador de T16–T18.
+- `docs/actions-accessibility-verification.md`: acciones, foco, móvil y Lighthouse de T19–T20.
 
-Pendiente desde T19: acciones de paquetes, pulido de interfaz y extra de IA con OpenAI. El listado actual no tiene paginación; con mayor volumen habrá que paginar o limitar los resultados. El README final se completará en T25.
+Pendiente desde T21: extra de IA con OpenAI y cierre de la entrega. El listado no tiene paginación y el detalle renderiza hasta 1 000 paquetes a la vez; con mayor volumen habrá que limitar los resultados. El README final se completará en T25.

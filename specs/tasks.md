@@ -102,11 +102,11 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [x] **T18 Lista de pedidos y tarjetas** ⏱ 35 min · Dep. T14, T16 · **CA-22 a 26, 29, 30**
   - `useOrders`, `OrderList` (carga / vacío / error con reintento), `OrderCard` con barra de progreso accesible, conteo de los 4 estados (incluye ceros) y detalle expandible de paquetes. (`feat(ui): order list with progress`)
 
-- [ ] **T19 Acciones sobre paquetes** ⏱ 35 min · Dep. T15, T18 · **CA-31, 32, 33**
+- [x] **T19 Acciones sobre paquetes** ⏱ 35 min · Dep. T15, T18 · **CA-31, 32, 33**
   - `PackageRow` con `Avanzar` (no en `done`) y `Rechazar` (solo en `review`); envía `expectedStatus`; deshabilita mientras la mutación está en curso; invalida `["orders"]` al terminar; ante cualquier error (409, red, etc.) muestra mensaje y resincroniza; si la red sigue caída, ofrece reintento.
   - Pruebas de componente: botones visibles según estado; mensaje en conflicto. (`feat(ui): package actions`)
 
-- [ ] **T20 Pulido de UX y accesibilidad** ⏱ 20 min · Dep. T17–T19
+- [x] **T20 Pulido de UX y accesibilidad** ⏱ 20 min · Dep. T17–T19
   - Responsive en móvil, `aria-live` para resultados, estados no solo por color, foco visible, textos en español. Revisión manual con teclado. (`style(ui): responsive and accessibility pass`)
 
 > **Punto de corte:** al terminar T20 la entrega mínima está completa. Desplegar, probar en producción y asegurar que el correo se pueda enviar con esto aunque lo demás falle.
