@@ -7,7 +7,23 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["tests/**/*.test.{ts,tsx}"],
-    setupFiles: ["./tests/setup.ts"],
+    projects: [
+      {
+        test: {
+          name: "unit",
+          include: ["tests/unit/**/*.test.{ts,tsx}"],
+          setupFiles: ["./tests/setup.ts"],
+        },
+      },
+      {
+        test: {
+          name: "integration",
+          include: ["tests/integration/**/*.test.ts"],
+          fileParallelism: false,
+          globalSetup: "./tests/integration/global-setup.ts",
+          setupFiles: ["./tests/integration/setup.ts"],
+        },
+      },
+    ],
   },
 });

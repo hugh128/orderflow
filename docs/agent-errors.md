@@ -21,3 +21,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: `CA-05: conserva la suma y los rangos para todo total válido` excedió el timeout de cinco segundos; los otros 13 casos pasaron.
 - Cómo se corrigió: se mantuvieron las mismas verificaciones de suma, cantidad y tamaños sobre casos deterministas que cubren todos los restos y los límites de cada cantidad de paquetes, sin aumentar el timeout.
 - Lección / regla añadida: elegir clases de equivalencia y límites para mantener rápidas las pruebas unitarias; un barrido completo no siempre aporta valor proporcional a su costo.
+
+## Error 3: helper de pruebas acoplado a ProcessEnv de Next.js
+- Qué pasó: tipé el entorno inyectable del guard de BD como `NodeJS.ProcessEnv`. Next.js exige `NODE_ENV` en ese tipo, aunque el guard solo necesita tres URL.
+- Cómo se detectó: `pnpm typecheck` rechazó los objetos de prueba con TS2345 por ausencia de `NODE_ENV`; la ejecución de las pruebas sí pasaba.
+- Cómo se corrigió: el helper recibió un tipo explícito con las tres variables opcionales que realmente consulta, compatible con `process.env` y los casos de prueba.
+- Lección / regla añadida: tipar las dependencias inyectadas por su contrato mínimo, sin acoplar utilidades de pruebas a tipos globales del framework.
