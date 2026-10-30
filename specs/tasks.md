@@ -92,7 +92,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 5: Interfaz
 
-- [ ] **T16 Proveedores y layout** ⏱ 15 min · Dep. T01
+- [x] **T16 Proveedores y layout** ⏱ 15 min · Dep. T01
   - `QueryClientProvider`, layout con título, estilos base de Tailwind, función `apiFetch` tipada que lanza un `ApiError` con `code` y `message`. (`feat(ui): layout and providers`)
 
 - [ ] **T17 Formulario de creación** ⏱ 35 min · Dep. T13, T16 · **CA-07, 08, 09, 11**
