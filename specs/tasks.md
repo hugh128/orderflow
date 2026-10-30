@@ -10,12 +10,12 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 0: Cimientos
 
-- [ ] **T00 Repositorio y specs** ⏱ 10 min
+- [x] **T00 Repositorio y specs** ⏱ 10 min
   - Crear repo público en GitHub. Añadir `specs/`, `CLAUDE.md`, `AGENTS.md`, `docs/agent-errors.md` (vacío con plantilla) y `.gitignore`.
   - Conservar el primer commit de Fase 1 ya publicado; añadir plan y tareas en un segundo commit de documentación, antes de cualquier código. (`docs: add technical plan and tasks`)
   - Hecho cuando: el historial muestra specs antes que código.
 
-- [ ] **T01 Esqueleto del proyecto** ⏱ 20 min · Dep. T00
+- [x] **T01 Esqueleto del proyecto** ⏱ 20 min · Dep. T00
   - `pnpm create next-app` (TypeScript, App Router, Tailwind, ESLint, `src/`). Instalar: `zod`, `@tanstack/react-query`, `@tanstack/react-form`, `drizzle-orm`, `postgres`, `drizzle-kit`, `vitest`, `dotenv`.
   - Scripts en `package.json`: `lint`, `typecheck`, `test`, `db:generate`, `db:migrate`. `.env.example` según plan §10.
   - Configurar también `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event` y `jsdom` para las pruebas de componente. Fijar `packageManager` con la versión de pnpm utilizada para CI. Una prueba inicial de Vitest que verifique la configuración. (`chore: scaffold next app with tooling`)
