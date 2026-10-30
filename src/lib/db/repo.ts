@@ -7,7 +7,8 @@ import type { createOrderSchema } from "../schemas/order";
 import { splitIntoPackages } from "../domain/split-into-packages";
 import { getDb } from "./client";
 import { DuplicateOrderNumberError, isUniqueViolation, NotFoundError, StatusConflictError } from "./errors";
-import { orders, packages } from "./schema";
+import { orders, packages, packageEvents } from "./schema";
+import { rejectionReasonSchema } from "../schemas/rejection";
 
 export async function createOrderWithPackages(input: z.output<typeof createOrderSchema>) {
   const db = getDb();
@@ -39,19 +40,26 @@ export async function transitionPackage(
   id: string,
   expected: PackageStatus,
   kind: "advance" | "reject",
+  reason?: string,
 ) {
   const status = kind === "advance" ? advance(expected) : reject(expected);
+  const validatedReason = kind === "reject" ? rejectionReasonSchema.parse(reason) : null;
   const db = getDb();
-  const [updated] = await db.update(packages)
+  return db.transaction(async (tx) => {
+  const [updated] = await tx.update(packages)
     .set({ status, updatedAt: new Date() })
     .where(and(eq(packages.id, id), eq(packages.status, expected)))
     .returning();
-  if (updated) return updated;
+  if (updated) {
+    await tx.insert(packageEvents).values({ packageId: id, fromStatus: expected, toStatus: updated.status, kind, reason: validatedReason });
+    return updated;
+  }
 
-  const [current] = await db.select({ status: packages.status }).from(packages)
+  const [current] = await tx.select({ status: packages.status }).from(packages)
     .where(eq(packages.id, id)).limit(1);
   if (!current) throw new NotFoundError();
   throw new StatusConflictError(current.status);
+  });
 }
 
 export async function listOrders() {

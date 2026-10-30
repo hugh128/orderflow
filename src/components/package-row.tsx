@@ -7,6 +7,7 @@ import { nextStatus } from "@/lib/domain/package-status";
 import { STATUS_LABELS } from "@/lib/status-labels";
 import type { PackageDTO } from "@/lib/dto";
 import { StatusBadge } from "./status-badge";
+import { rejectionReasonSchema } from "@/lib/schemas/rejection";
 
 export function PackageRow({ pkg }: { pkg: PackageDTO }) {
   const mutation = useTransition();
@@ -17,6 +18,11 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
   const [message, setMessage] = useState("");
   const [failed, setFailed] = useState(false);
   const [synchronizing, setSynchronizing] = useState(false);
+  const [rejecting, setRejecting] = useState(false);
+  const [reason, setReason] = useState("");
+  const [reasonError, setReasonError] = useState("");
+  const reasonInput = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { if (rejecting) reasonInput.current?.focus(); }, [rejecting]);
   const to = nextStatus(pkg.status);
   const pending = mutation.isPending || synchronizing;
 
@@ -32,7 +38,7 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
     if (pkg.status !== originStatus.current) restoreFocus.current = false;
   }, [pending, pkg.status]);
 
-  async function transition(kind: "advance" | "reject") {
+  async function transition(kind: "advance" | "reject", validatedReason?: string) {
     if (locked.current) return;
     restoreFocus.current = Boolean(row.current?.contains(document.activeElement));
     originStatus.current = pkg.status;
@@ -40,7 +46,9 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
     setMessage("");
     setFailed(false);
     try {
-      const result = await mutation.mutateAsync({ id: pkg.id, expectedStatus: pkg.status, kind });
+      const result = await mutation.mutateAsync({ id: pkg.id, expectedStatus: pkg.status, kind, reason: validatedReason });
+      setRejecting(false);
+      setReason("");
       const stale = mutation.hasSynchronizationError();
       setFailed(stale);
       setMessage(`Paquete ${pkg.sequence} pasó a ${STATUS_LABELS[result.package.status]}${stale ? ". No se pudo actualizar la vista; reintenta la sincronización" : ""}`);
@@ -77,9 +85,24 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
       {to !== null && <button className="button" type="button" disabled={pending}
         aria-label={`Avanzar paquete ${pkg.sequence} a ${STATUS_LABELS[to]}`} onClick={() => void transition("advance")}>Avanzar</button>}
       {pkg.status === "review" && <button className="button" type="button" disabled={pending}
-        aria-label={`Rechazar paquete ${pkg.sequence} a En proceso`} onClick={() => void transition("reject")}>Rechazar</button>}
+        aria-label={`Rechazar paquete ${pkg.sequence} a En proceso`} aria-expanded={rejecting} onClick={() => setRejecting(true)}>Rechazar</button>}
       {pkg.status === "done" && <span className="completed">Completado</span>}
     </div>
+    {rejecting && pkg.status === "review" && <form className="rejection-form field" noValidate onSubmit={event => {
+      event.preventDefault();
+      const parsed = rejectionReasonSchema.safeParse(reason);
+      if (!parsed.success) { setReasonError(parsed.error.issues[0].message); return; }
+      setReasonError("");
+      void transition("reject", parsed.data);
+    }}>
+      <label htmlFor={`reason-${pkg.id}`}>Motivo del rechazo del paquete {pkg.sequence}</label>
+      <textarea ref={reasonInput} id={`reason-${pkg.id}`} value={reason} maxLength={300} disabled={pending}
+        aria-invalid={Boolean(reasonError)} aria-describedby={reasonError ? `reason-error-${pkg.id}` : undefined}
+        onChange={event => { setReason(event.target.value); setReasonError(""); }} />
+      {reasonError && <p className="field-error" id={`reason-error-${pkg.id}`}>{reasonError}</p>}
+      <div className="package-actions"><button className="button" type="submit" disabled={pending} aria-label={`Confirmar rechazo del paquete ${pkg.sequence}`}>Confirmar rechazo</button>
+        <button className="button" type="button" disabled={pending} onClick={() => { setRejecting(false); row.current?.querySelector<HTMLButtonElement>('button[aria-expanded]')?.focus(); }}>Cancelar</button></div>
+    </form>}
     <div className="package-feedback">
       <p role="status" aria-live="polite" aria-atomic="true">{message}</p>
       {failed && <button className="button" type="button" disabled={pending} onClick={() => void synchronize()}

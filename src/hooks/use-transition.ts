@@ -10,8 +10,8 @@ export function useTransition() {
   const client = useQueryClient();
   const synchronize = () => client.invalidateQueries({ queryKey: orderKeys.all });
   const mutation = useMutation({
-    mutationFn: ({ id, expectedStatus, kind }: { id: string; expectedStatus: PackageStatus; kind: "advance" | "reject" }) =>
-      apiFetch<{ package: PackageDTO; order: OrderDTO }>(`/api/packages/${id}/${kind}`, { method: "POST", body: { expectedStatus } }),
+    mutationFn: ({ id, expectedStatus, kind, reason }: { id: string; expectedStatus: PackageStatus; kind: "advance" | "reject"; reason?: string }) =>
+      apiFetch<{ package: PackageDTO; order: OrderDTO }>(`/api/packages/${id}/${kind}`, { method: "POST", body: { expectedStatus, ...(kind === "reject" && { reason }) } }),
     onSuccess: () => synchronize(),
     onError: () => synchronize(),
   });

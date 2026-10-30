@@ -41,9 +41,15 @@ describe("acciones de paquetes", () => {
     const { client } = row("review");
     const invalidate = vi.spyOn(client, "invalidateQueries");
     fireEvent.click(screen.getByRole("button", { name: "Rechazar paquete 2 a En proceso" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar rechazo del paquete 2" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Motivo del rechazo del paquete 2")).toHaveAttribute("aria-invalid", "true");
+    fireEvent.change(screen.getByLabelText("Motivo del rechazo del paquete 2"), { target: { value: " Revisar acabado " } });
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar rechazo del paquete 2" }));
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Paquete 2 pasó a En proceso"));
     expect(fetchMock.mock.calls[0][0]).toBe(`/api/packages/${pkg.id}/reject`);
-    expect(JSON.parse(fetchMock.mock.calls[0][1]?.body as string)).toEqual({ expectedStatus: "review" });
+    expect(JSON.parse(fetchMock.mock.calls[0][1]?.body as string)).toEqual({ expectedStatus: "review", reason: "Revisar acabado" });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ["orders"] });
   });
 

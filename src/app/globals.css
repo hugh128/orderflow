@@ -89,6 +89,9 @@ body {
 .package-row:focus-visible { outline-offset: -3px; }
 .package-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; grid-column: 1 / -1; }
 .package-feedback { grid-column: 1 / -1; font-size: 0.8125rem; color: var(--muted); }
+.rejection-form { grid-column: 1 / -1; padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem; background: #f6f8f4; }
+.rejection-form textarea { width: 100%; min-height: 5rem; border: 1px solid #abb8b1; border-radius: 0.375rem; padding: 0.75rem; background: var(--surface); }
+.rejection-form .package-actions { margin-top: 0.75rem; }
 .package-feedback:has(p:empty):not(:has(button)) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .package-feedback .button { margin-top: 0.5rem; }
 .completed { color: var(--accent); font-size: 0.8125rem; font-weight: 600; }

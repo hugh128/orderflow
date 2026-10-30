@@ -8,6 +8,13 @@
       "when": 1793328632368,
       "tag": "0000_initial_orders",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793344133051,
+      "tag": "0001_package_events",
+      "breakpoints": true
     }
   ]
 }
