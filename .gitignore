@@ -1,0 +1,19 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+.vercel/
+
+# Environment variables and private keys
+.env*
+!.env.example
+*.pem
+*.key
+
+# Logs and local files
+*.log
+.DS_Store
+Thumbs.db
