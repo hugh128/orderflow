@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import postgres from "postgres";
+import { handleError } from "@/lib/api/errors";
 import { splitIntoPackages } from "@/lib/domain/split-into-packages";
 import { DuplicateOrderNumberError } from "@/lib/db/errors";
 import { createOrderWithPackages } from "@/lib/db/repo";
@@ -62,6 +63,20 @@ describe("createOrderWithPackages", () => {
     expect(rejected[0].reason).toBeInstanceOf(DuplicateOrderNumberError);
     expect(await sql`SELECT id FROM orders`).toHaveLength(1);
     expect(await sql`SELECT id FROM packages`).toHaveLength(3);
+  });
+
+  it("CA-09: la unicidad envuelta por Drizzle llega al manejador como 409", async () => {
+    await createOrderWithPackages(input());
+    const error = await createOrderWithPackages(input(100, "a-1")).then(
+      () => { throw new Error("Se esperaba un número duplicado"); },
+      (error: unknown) => error,
+    );
+    expect(error).toBeInstanceOf(DuplicateOrderNumberError);
+    const response = handleError(error);
+    expect(response.status).toBe(409);
+    expect(await response.json()).toEqual({ error: {
+      code: "DUPLICATE_ORDER_NUMBER", message: "El número de pedido ya existe",
+    } });
   });
 
   it("CA-27: el pedido y sus paquetes persisten al abrir otra conexión", async () => {

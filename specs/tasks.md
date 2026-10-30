@@ -76,7 +76,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 4: API
 
-- [ ] **T12 Utilidades de API** ⏱ 15 min · Dep. T09, T10
+- [x] **T12 Utilidades de API** ⏱ 15 min · Dep. T09, T10
   - `handleError` que mapea `ZodError` → 400 `VALIDATION_ERROR` (con `details` por campo), `DuplicateOrderNumberError` → 409, `InvalidTransitionError` → 409, `StatusConflictError` → 409 con `currentStatus`, `NotFoundError` → 404, otros → 500 genérico (sin filtrar detalles). Pruebas unitarias de cada mapeo. (`feat(api): add error mapping`)
 
 - [ ] **T13 `POST /api/orders`** ⏱ 20 min · Dep. T12 · **CA-01, 07, 08, 09, 11, 12**
