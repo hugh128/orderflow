@@ -161,7 +161,7 @@ Consulta la [configuración del parser](docs/ai-parser-verification.md) y la [do
 - Historial limitado a los últimos 50 movimientos consultados, sin reconstruir eventos anteriores a su implementación. No es una auditoría inmutable frente al administrador de la BD.
 - El limitador de IA reside en memoria por instancia serverless: es de mejor esfuerzo, no un contador global. Para mayor exposición se necesitarían almacenamiento compartido y controles de abuso adicionales.
 - La validación rechaza datos fuera de las reglas, pero una extracción puede ser plausible y equivocada; requiere revisión humana.
-- Suite e2e independiente diferida por decisión del candidato. El envío del correo queda a cargo del candidato.
+- Suite e2e independiente diferida por decisión del candidato.
 
 ## Estructura y evidencias
 
