@@ -60,11 +60,11 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - Pruebas de integración directas con SQL: insertar número duplicado con distinta capitalización o espacios extremos falla; paquete con 0 o 101 unidades falla; `sequence` repetido en un pedido falla; estado fuera del enum falla.
   - Aplicar la migración a Supabase. (`feat(db): add schema, migration and constraints`)
 
-- [ ] **T09 Crear pedido con paquetes** ⏱ 30 min · Dep. T04, T07, T08 · **CA-01 a 06, 09, 10, 27**
+- [x] **T09 Crear pedido con paquetes** ⏱ 30 min · Dep. T04, T07, T08 · **CA-01 a 06, 09, 10, 27**
   - Pruebas: 250 unidades → 3 paquetes `pending` con `sequence` 1–3 y unidades 100/100/50; suma de paquetes = total; si falla el insert de paquetes (simular con unidades inválidas forzadas) no queda pedido (rollback); número duplicado (también `"a-1"` vs `"A-1"`) → `DuplicateOrderNumberError`; dos creaciones concurrentes con el mismo número con `Promise.all` → exactamente una tiene éxito.
   - Implementar `createOrderWithPackages` y `isUniqueViolation`. (`feat(db): create order and packages in one transaction`)
 
-- [ ] **T10 Transición atómica de paquetes** ⏱ 30 min · Dep. T05, T08 · **CA-13 a 21**
+- [x] **T10 Transición atómica de paquetes** ⏱ 30 min · Dep. T05, T08 · **CA-13 a 21**
   - Pruebas: avance y rechazo válidos persisten; `expected` ≠ estado real → `StatusConflictError` con `currentStatus`; `done` + avanzar → `InvalidTransitionError`; id inexistente → `NotFoundError`; **dos `advance` concurrentes** con el mismo `expected` → un éxito y un conflicto, y el estado final avanzó **una sola vez**.
   - Implementar `transitionPackage`. (`feat(db): atomic package transitions`)
 

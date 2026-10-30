@@ -27,3 +27,15 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: `pnpm typecheck` rechazó los objetos de prueba con TS2345 por ausencia de `NODE_ENV`; la ejecución de las pruebas sí pasaba.
 - Cómo se corrigió: el helper recibió un tipo explícito con las tres variables opcionales que realmente consulta, compatible con `process.env` y los casos de prueba.
 - Lección / regla añadida: tipar las dependencias inyectadas por su contrato mínimo, sin acoplar utilidades de pruebas a tipos globales del framework.
+
+## Error 4: observación de concurrencia con estadísticas antiguas
+- Qué pasó: consulté `pg_stat_activity` dentro de la misma transacción que bloqueaba la tabla; PostgreSQL conservó la instantánea de estadísticas y el observador no vio las dos escrituras.
+- Cómo se detectó: CA-10 falló; la consulta interna informó cero conexiones esperando y una consulta independiente mostró dos.
+- Cómo se corrigió: el observador consulta desde otra conexión, fuera de la transacción que mantiene el bloqueo.
+- Lección / regla añadida: observar concurrencia desde una conexión independiente y exigir evidencia de dos escrituras simultáneas antes de liberar el bloqueo.
+
+## Error 5: compartir el cliente SQL crudo con Drizzle
+- Qué pasó: reutilicé el cliente de las pruebas SQL para Drizzle, que sustituye sus parsers de fechas.
+- Cómo se detectó: CA-28 recibió `updated_at` como texto en vez de Date al ejecutar la suite completa.
+- Cómo se corrigió: clientes separados para consultas SQL directas y repositorio, ambos limitados a la base local protegida.
+- Lección / regla añadida: comprobar los efectos del adaptador sobre el cliente y ejecutar también las pruebas existentes al cambiar la infraestructura.
