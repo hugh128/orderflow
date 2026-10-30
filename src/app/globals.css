@@ -92,6 +92,10 @@ body {
 .rejection-form { grid-column: 1 / -1; padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem; background: #f6f8f4; }
 .rejection-form textarea { width: 100%; min-height: 5rem; border: 1px solid #abb8b1; border-radius: 0.375rem; padding: 0.75rem; background: var(--surface); }
 .rejection-form .package-actions { margin-top: 0.75rem; }
+.package-history { grid-column: 1 / -1; min-width: 0; }
+.package-history section { padding: 1rem 0; font-size: 0.8125rem; overflow-wrap: anywhere; }
+.history-timeline { list-style: none; border-left: 2px solid var(--border); margin: 1rem 0; padding-left: 1rem; }
+.history-timeline li { margin-bottom: 1rem; }
 .package-feedback:has(p:empty):not(:has(button)) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .package-feedback .button { margin-top: 0.5rem; }
 .completed { color: var(--accent); font-size: 0.8125rem; font-weight: 600; }

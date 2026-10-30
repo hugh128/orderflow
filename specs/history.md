@@ -25,7 +25,7 @@ Tres capacidades, en orden: persistencia de eventos → consulta e interfaz de h
 ## Diseño y tareas
 
 - [x] **H01 Persistencia y rechazo coherente:** tabla `package_events`, migración aditiva con RLS/checks/índice, transición transaccional y motivo obligatorio en repositorio/API/formulario para que el nuevo contrato sea usable de extremo a extremo. Pruebas de integridad, rollback y concurrencia. Verificado: 390 pruebas, lint y tipos. Commit `feat(db): record package transitions atomically`.
-- [ ] **H02 Consulta de historial:** endpoint e interfaz de historial bajo demanda, DTO y estados de carga/error/vacío. Commit `feat(ui): rejection reasons and package history`.
+- [x] **H02 Consulta de historial:** endpoint e interfaz de historial bajo demanda, DTO y estados de carga/error/vacío. Commit `feat(ui): rejection reasons and package history`.
 - [ ] **H03 Resumen IA:** snapshot del pedido, selección de eventos con Cloudflare, endpoint con límite compartido y modo de resumen en asistente. Pruebas unitarias/API/componentes, build y navegador real. Commit `feat(ai): summarize order progress from recorded events`.
 
 Verificar en cada paso `corepack pnpm lint`, `corepack pnpm typecheck`, `corepack pnpm test`; build antes del PR. Mantener migraciones en `drizzle/`, esquema en `src/lib/db`, validación en `src/lib/schemas`, integración en `src/lib/ai` y pruebas en las carpetas existentes. Sin dependencias nuevas previstas. Probar primero en PostgreSQL local y aplicar solo la migración aditiva verificada a Supabase antes del despliegue.

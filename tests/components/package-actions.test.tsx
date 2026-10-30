@@ -21,10 +21,11 @@ describe("acciones de paquetes", () => {
     expect(screen.queryByRole("button", { name: "Rechazar paquete 2 a En proceso" }) !== null).toBe(canReject);
   });
 
-  it("CA-31: Listo muestra Completado sin acciones", () => {
+  it("CA-31: Listo muestra Completado sin acciones de transición", () => {
     row("done");
     expect(screen.getByText("Completado")).toBeInTheDocument();
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Avanzar|Rechazar/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Ver historial del paquete 2" })).toBeEnabled();
   });
 
   it("T20: identifica el paquete y mantiene una región de anuncio antes de actuar", () => {

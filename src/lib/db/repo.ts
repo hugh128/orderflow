@@ -86,3 +86,17 @@ export async function getOrder(id: string) {
     .where(eq(packages.orderId, id)).orderBy(asc(packages.sequence));
   return { ...order, packages: orderedPackages, summary: computeProgress(orderedPackages) };
 }
+
+export async function getPackageHistory(id: string) {
+  const db = getDb();
+  const [pkg] = await db.select({ id: packages.id }).from(packages).where(eq(packages.id, id)).limit(1);
+  if (!pkg) throw new NotFoundError();
+  return (await db.select().from(packageEvents).where(eq(packageEvents.packageId, id))
+    .orderBy(desc(packageEvents.id)).limit(50)).reverse();
+}
+
+export async function getOrderEvents(orderId: string) {
+  return (await getDb().select({ event: packageEvents, sequence: packages.sequence }).from(packageEvents)
+    .innerJoin(packages, eq(packages.id, packageEvents.packageId))
+    .where(eq(packages.orderId, orderId)).orderBy(desc(packageEvents.id)).limit(50)).reverse();
+}

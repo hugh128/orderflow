@@ -8,6 +8,7 @@ import { STATUS_LABELS } from "@/lib/status-labels";
 import type { PackageDTO } from "@/lib/dto";
 import { StatusBadge } from "./status-badge";
 import { rejectionReasonSchema } from "@/lib/schemas/rejection";
+import { PackageHistory } from "./package-history";
 
 export function PackageRow({ pkg }: { pkg: PackageDTO }) {
   const mutation = useTransition();
@@ -103,6 +104,7 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
       <div className="package-actions"><button className="button" type="submit" disabled={pending} aria-label={`Confirmar rechazo del paquete ${pkg.sequence}`}>Confirmar rechazo</button>
         <button className="button" type="button" disabled={pending} onClick={() => { setRejecting(false); row.current?.querySelector<HTMLButtonElement>('button[aria-expanded]')?.focus(); }}>Cancelar</button></div>
     </form>}
+    <PackageHistory id={pkg.id} sequence={pkg.sequence} />
     <div className="package-feedback">
       <p role="status" aria-live="polite" aria-atomic="true">{message}</p>
       {failed && <button className="button" type="button" disabled={pending} onClick={() => void synchronize()}
