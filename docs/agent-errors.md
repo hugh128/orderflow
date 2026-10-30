@@ -45,3 +45,15 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: typecheck rechazó el acumulador de `reduce`, porque la tabla `as const` limitaba el tipo a los literales 0, 1, 2 y 3. Revisar esa línea también mostró que la comprobación no verificaba el resultado real.
 - Cómo se corrigió: la suma se verifica sobre `detail.summary.counts`, manteniendo además la comparación exacta del resumen completo.
 - Lección / regla añadida: las aserciones deben comprobar la salida del sistema, no propiedades de los propios datos esperados.
+
+## Error 7: prueba huérfana de la ruta temporal eliminada
+- Qué pasó: eliminé `/api/health` al cerrar T14, pero conservé su prueba unitaria, que importaba el archivo borrado.
+- Cómo se detectó: el siguiente typecheck falló con TS2307 en `tests/unit/health.test.ts`.
+- Cómo se corrigió: se retiró la prueba de la funcionalidad temporal eliminada; la conexión de BD queda cubierta por las pruebas de integración de los endpoints reales.
+- Lección / regla añadida: al retirar una ruta temporal, buscar referencias tanto en `src` como en `tests` y verificar el cambio completo antes del commit.
+
+## Error 8: las rutas exigían la conexión de BD durante el build
+- Qué pasó: los endpoints importaron el cliente de BD que validaba DATABASE_URL al cargar el módulo. El build local pasó con `.env`, pero CI y Preview no tienen esa variable.
+- Cómo se detectó: las pruebas y tipos de CI pasaron, pero el build falló por ausencia de DATABASE_URL; el preview también falló.
+- Cómo se corrigió: el repositorio obtiene el cliente mediante inicialización diferida. Importar las rutas no requiere secretos; utilizar la BD sin configuración sigue lanzando un error explícito, que el handler convierte en 500 genérico.
+- Lección / regla añadida: verificar que el build no depende de secretos locales; las conexiones y su validación deben iniciarse cuando se utilizan, no al importar las rutas.

@@ -31,8 +31,8 @@ export class StatusConflictError extends Error {
 }
 
 export class NotFoundError extends Error {
-  constructor() {
-    super("El paquete no existe");
+  constructor(message = "El paquete no existe") {
+    super(message);
     this.name = "NotFoundError";
   }
 }

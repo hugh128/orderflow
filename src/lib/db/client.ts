@@ -2,17 +2,26 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { createSqlClient } from "./connection";
 import * as schema from "./schema";
 
-const url = process.env.DATABASE_URL;
-if (!url) throw new Error("DATABASE_URL es obligatoria para conectar la aplicación");
-
 const developmentGlobal = globalThis as typeof globalThis & {
   orderflowSql?: ReturnType<typeof createSqlClient>;
 };
-const development = process.env.NODE_ENV === "development";
+let client: ReturnType<typeof createSqlClient> | undefined;
+let database: ReturnType<typeof createDatabase> | undefined;
 
-export const sql = (development ? developmentGlobal.orderflowSql : undefined)
-  ?? createSqlClient(url);
+export function getSql() {
+  if (client) return client;
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL es obligatoria para conectar la aplicación");
+  const development = process.env.NODE_ENV === "development";
+  client = (development ? developmentGlobal.orderflowSql : undefined) ?? createSqlClient(url);
+  if (development) developmentGlobal.orderflowSql = client;
+  return client;
+}
 
-if (development) developmentGlobal.orderflowSql = sql;
+function createDatabase() {
+  return drizzle(getSql(), { schema });
+}
 
-export const db = drizzle(sql, { schema });
+export function getDb() {
+  return database ??= createDatabase();
+}

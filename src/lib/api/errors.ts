@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { DuplicateOrderNumberError, NotFoundError, StatusConflictError } from "../db/errors";
 import { InvalidTransitionError } from "../domain/package-status";
+import { InvalidJsonError } from "./read-json";
 
 export function errorResponse(status: number, code: string, message: string, details?: unknown): Response {
   return Response.json({
@@ -9,6 +10,9 @@ export function errorResponse(status: number, code: string, message: string, det
 }
 
 export function handleError(error: unknown): Response {
+  if (error instanceof InvalidJsonError) {
+    return errorResponse(400, "INVALID_JSON", error.message);
+  }
   if (error instanceof z.ZodError) {
     return errorResponse(400, "VALIDATION_ERROR", "Datos inválidos", z.flattenError(error));
   }

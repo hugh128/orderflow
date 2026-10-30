@@ -3,7 +3,7 @@ import { resetDb, repoSql, testSql } from "./db";
 
 vi.mock("@/lib/db/client", async () => {
   const { testDb, repoSql } = await import("./db");
-  return { db: testDb, sql: repoSql };
+  return { getDb: () => testDb, getSql: () => repoSql };
 });
 
 beforeEach(resetDb);

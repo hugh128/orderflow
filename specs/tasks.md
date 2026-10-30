@@ -79,13 +79,13 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [x] **T12 Utilidades de API** ⏱ 15 min · Dep. T09, T10
   - `handleError` que mapea `ZodError` → 400 `VALIDATION_ERROR` (con `details` por campo), `DuplicateOrderNumberError` → 409, `InvalidTransitionError` → 409, `StatusConflictError` → 409 con `currentStatus`, `NotFoundError` → 404, otros → 500 genérico (sin filtrar detalles). Pruebas unitarias de cada mapeo. (`feat(api): add error mapping`)
 
-- [ ] **T13 `POST /api/orders`** ⏱ 20 min · Dep. T12 · **CA-01, 07, 08, 09, 11, 12**
+- [x] **T13 `POST /api/orders`** ⏱ 20 min · Dep. T12 · **CA-01, 07, 08, 09, 11, 12**
   - Pruebas invocando el handler con `Request`: 201 con `OrderDetailDTO` y 3 paquetes para 250; 400 para cada entrada inválida de T07 (**CA-12:** sin pasar por el cliente); 400 con JSON malformado; 409 duplicado. (`feat(api): create order endpoint`)
 
-- [ ] **T14 `GET /api/orders` y `GET /api/orders/:id`** ⏱ 15 min · Dep. T11, T12 · **CA-29, 30**
+- [x] **T14 `GET /api/orders` y `GET /api/orders/:id`** ⏱ 15 min · Dep. T11, T12 · **CA-29, 30**
   - Pruebas: lista vacía → `[]`; orden y resumen correctos; detalle 200; id no UUID → 400; inexistente → 404. (`feat(api): list and detail endpoints`)
 
-- [ ] **T15 `POST /api/packages/:id/advance` y `/reject`** ⏱ 25 min · Dep. T10, T12 · **CA-13 a 21, 33**
+- [x] **T15 `POST /api/packages/:id/advance` y `/reject`** ⏱ 25 min · Dep. T10, T12 · **CA-13 a 21, 33**
   - Pruebas: avance/rechazo OK devuelven paquete + pedido actualizado (con nuevo avance); falta `expectedStatus` o valor inválido → 400; `INVALID_TRANSITION`; `STATUS_CONFLICT` con `currentStatus`; 404; doble petición simultánea → 200 + 409. (`feat(api): advance and reject package endpoints`)
 
 ---

@@ -5,11 +5,12 @@ import { advance, reject } from "../domain/package-status";
 import type { PackageStatus } from "../domain/types";
 import type { createOrderSchema } from "../schemas/order";
 import { splitIntoPackages } from "../domain/split-into-packages";
-import { db } from "./client";
+import { getDb } from "./client";
 import { DuplicateOrderNumberError, isUniqueViolation, NotFoundError, StatusConflictError } from "./errors";
 import { orders, packages } from "./schema";
 
 export async function createOrderWithPackages(input: z.output<typeof createOrderSchema>) {
+  const db = getDb();
   try {
     return await db.transaction(async (tx) => {
       const [order] = await tx.insert(orders).values({
@@ -40,6 +41,7 @@ export async function transitionPackage(
   kind: "advance" | "reject",
 ) {
   const status = kind === "advance" ? advance(expected) : reject(expected);
+  const db = getDb();
   const [updated] = await db.update(packages)
     .set({ status, updatedAt: new Date() })
     .where(and(eq(packages.id, id), eq(packages.status, expected)))
@@ -53,6 +55,7 @@ export async function transitionPackage(
 }
 
 export async function listOrders() {
+  const db = getDb();
   const rows = await db.select().from(orders).orderBy(desc(orders.createdAt), desc(orders.id));
   if (rows.length === 0) return [];
 
@@ -68,6 +71,7 @@ export async function listOrders() {
 }
 
 export async function getOrder(id: string) {
+  const db = getDb();
   const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
   if (!order) return null;
   const orderedPackages = await db.select().from(packages)
