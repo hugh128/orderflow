@@ -116,11 +116,10 @@ body {
 .ai-result { font-size: 0.875rem; overflow-wrap: anywhere; }
 .ai-result > p { margin-top: 0.75rem; }
 .ai-issues { margin-top: 0.5rem; padding-left: 1.25rem; list-style: disc; color: var(--muted); }
-.assistant-launcher { position: fixed; z-index: 20; right: 1.5rem; bottom: calc(1.5rem + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 0.75rem; min-height: 60px; padding: 0.75rem 1.25rem; border-radius: 2rem; background: var(--accent); color: white; box-shadow: 0 6px 24px #173a3133; text-align: left; cursor: pointer; }
+.assistant-launcher { position: fixed; z-index: 20; right: 1.5rem; bottom: calc(1.5rem + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 0.5rem; min-height: 48px; padding: 0.625rem 0.875rem; border-radius: 2rem; background: var(--accent); color: white; box-shadow: 0 4px 16px #173a3126; cursor: pointer; }
 .assistant-launcher:hover { background: #104d41; }
-.assistant-launcher strong { display: block; font-size: 0.875rem; }
-.assistant-launcher small { display: block; font-size: 0.6875rem; margin-top: 0.125rem; }
-.assistant-spark { font-size: 1.75rem; line-height: 1; }
+.assistant-launcher strong { font-size: 0.8125rem; }
+.assistant-spark { font-size: 1.25rem; line-height: 1; }
 .assistant-dialog { position: fixed; inset: 1.25rem 1.25rem 1.25rem auto; margin: 0; width: min(28rem, calc(100vw - 2.5rem)); height: calc(100dvh - 2.5rem); max-height: none; max-width: none; padding: 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); color: var(--foreground); box-shadow: 0 12px 60px #142d3533; overflow: hidden; }
 .assistant-dialog[open] { display: flex; flex-direction: column; }
 .assistant-dialog::backdrop { background: #152e3959; }
@@ -141,8 +140,7 @@ body:has(.assistant-dialog[open]) { overflow: hidden; }
 .assistant-footnote { margin-top: 1.5rem; font-size: 0.75rem; line-height: 1.6; color: var(--muted); }
 .page-footer { padding-bottom: 5rem; }
 @media (max-width: 600px) {
-  .assistant-launcher { right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom)); min-height: 52px; }
-  .assistant-launcher small { display: none; }
+  .assistant-launcher { right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom)); }
   .assistant-dialog { inset: auto 0 0; width: 100%; height: auto; max-height: 92dvh; border-radius: 1rem 1rem 0 0; }
   .assistant-body { padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom)); }
   .assistant-heading { padding: 1rem 1.25rem; }
