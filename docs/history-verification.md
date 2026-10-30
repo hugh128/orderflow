@@ -42,6 +42,6 @@ Durante la verificación real, JSON Object devolvió comillas mal formadas. Se c
 
 `drizzle/0001_package_events.sql` es aditiva: crea tabla, checks, FK, índice y RLS; no altera datos existentes. Se probó en orders_test y orders_dev y se aplicó con `corepack pnpm db:migrate` a Supabase. Consulta posterior: RLS activo, cero políticas públicas y constraints esperados. No hay backfill.
 
-El código público anterior sigue funcionando hasta el merge; solo la nueva versión comienza a registrar eventos y exigir motivos. Los previews mantienen la separación de credenciales. Falta el recorrido público después de aprobar el PR.
+PR #18 fue aprobado y mergeado. La revisión pública posterior comprobó historial, rechazo con motivo, concurrencia y resumen con Cloudflare; sus resultados y limpieza se recopilan en [el cierre de entrega](delivery.md). Los previews mantienen la separación de credenciales.
 
 Referencias: [transacciones de Drizzle](https://orm.drizzle.team/docs/transactions), [RLS de Supabase](https://supabase.com/docs/guides/database/postgres/row-level-security) y [JSON Mode de Workers AI](https://developers.cloudflare.com/workers-ai/features/json-mode/).
