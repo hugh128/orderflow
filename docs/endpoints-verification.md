@@ -15,7 +15,7 @@ No se sobrescribe `DATABASE_URL` con `TEST_DATABASE_URL`: eso haría fallar el g
 
 ## Pruebas
 
-Las tres suites empezaron fallando por ausencia de las rutas correspondientes. Resultado final: **258 pruebas aprobadas**, lint, typecheck y build correctos.
+Las tres suites empezaron fallando por ausencia de las rutas correspondientes. Resultado final: **260 pruebas aprobadas**, lint, typecheck y build correctos, incluido un build con las URL de BD vacías.
 
 - T13 cubre CA-01, 07–09, 11 y 12 mediante Request reales, errores por campo, conteo de filas y ausencia de consultas para entradas inválidas. JSON no representa NaN ni Infinity: al serializarlos se convierten en null; la validación directa de esos valores ya está cubierta en T07.
 - T14 cubre CA-29 y 30: vacío, orden con fechas explícitas, resumen, paquetes ordenados, UUID reales, ID inválido sin consultas y 404 con UUID generado.
@@ -27,6 +27,8 @@ Mutaciones temporales detectadas y restauradas:
 2. Leer el estado actual en lugar de usar `expectedStatus`: la prueba de conflicto detectó 200 en vez de 409.
 
 El error real de dejar una prueba huérfana al retirar health se registró antes de corregirlo y tiene un commit `fix:` separado (error 7 de `docs/agent-errors.md`).
+
+CI también detectó que importar las rutas requería DATABASE_URL durante el build (error 8). Se corrigió con `getDb`/`getSql`: la inicialización ocurre al utilizar la BD, conserva el pool y la caché de desarrollo, y mantiene el error explícito si falta configuración. Pruebas adicionales comprueban la importación sin secretos y el 500 genérico al consultar. Preview puede compilar sin credenciales; sus operaciones de BD requieren una conexión configurada y no reciben secretos de producción.
 
 ## HTTP real
 

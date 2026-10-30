@@ -19,31 +19,34 @@ describe("T08: cliente de aplicación", () => {
   });
 
   it("T08: usa prepare=false y max=1", async () => {
-    await import("@/lib/db/client");
+    (await import("@/lib/db/client")).getDb();
     expect(connect).toHaveBeenCalledWith(expect.any(String), { prepare: false, max: 1 });
   });
 
   it("T08: reutiliza la conexión durante hot reload de desarrollo", async () => {
     vi.stubEnv("NODE_ENV", "development");
     const first = await import("@/lib/db/client");
+    const firstSql = first.getSql();
     vi.resetModules();
     const second = await import("@/lib/db/client");
-    expect(first.sql).toBe(second.sql);
+    expect(firstSql).toBe(second.getSql());
     expect(connect).toHaveBeenCalledTimes(1);
   });
 
   it("T08: no guarda el cliente en globalThis en producción", async () => {
     vi.stubEnv("NODE_ENV", "production");
-    await import("@/lib/db/client");
+    (await import("@/lib/db/client")).getDb();
     vi.resetModules();
-    await import("@/lib/db/client");
+    (await import("@/lib/db/client")).getDb();
     expect(connect).toHaveBeenCalledTimes(2);
     expect(Reflect.has(globalThis, "orderflowSql")).toBe(false);
   });
 
-  it("T08: falla explícitamente si falta DATABASE_URL", async () => {
+  it("T13-T15: importar sin DATABASE_URL permite compilar; usar la BD falla explícitamente", async () => {
     vi.stubEnv("DATABASE_URL", "");
-    await expect(import("@/lib/db/client")).rejects.toThrow("DATABASE_URL es obligatoria");
+    const client = await import("@/lib/db/client");
+    expect(connect).not.toHaveBeenCalled();
+    expect(() => client.getDb()).toThrow("DATABASE_URL es obligatoria");
     expect(connect).not.toHaveBeenCalled();
   });
 });

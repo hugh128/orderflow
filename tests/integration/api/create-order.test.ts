@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { POST } from "@/app/api/orders/route";
-import { sql as appSql } from "@/lib/db/client";
+import { getSql } from "@/lib/db/client";
 import { repoSql, queryLog, testSql as sql } from "../db";
 
 const valid = { number: "A-1", customer: "Textiles Sol", units: 250 };
@@ -10,7 +10,7 @@ const request = (value: unknown) => new Request("http://localhost/api/orders", {
 
 describe("POST /api/orders", () => {
   it("CA-12: el handler usa exclusivamente el cliente local de integración", () => {
-    expect(appSql).toBe(repoSql);
+    expect(getSql()).toBe(repoSql);
     expect(["localhost", "127.0.0.1", "::1"]).toContain(repoSql.options.host[0]);
     expect(repoSql.options.database).toBe("orders_test");
   });
