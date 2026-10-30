@@ -104,7 +104,7 @@ describe("acciones de paquetes", () => {
       return new Promise<Response>((resolve) => { finishDetail = resolve; });
     });
     renderWithQuery(<OrderList />);
-    fireEvent.click(await screen.findByRole("button", { name: "Ver paquetes de A-1" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Ver paquetes 3 del pedido A-1" }));
     const button = await screen.findByRole("button", { name: "Avanzar paquete 1 a Listo" });
     button.focus();
     fireEvent.click(button);

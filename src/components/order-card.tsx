@@ -22,8 +22,8 @@ export function OrderCard({ order }: { order: OrderDTO }) {
       <ProgressBar percent={order.summary.percent} label={`Avance del pedido ${order.number}`} />
       <StatusCounts counts={order.summary.counts} />
       <button type="button" className="expand-button" aria-expanded={expanded} aria-controls={detailsId}
-        aria-label={`${expanded ? "Ocultar" : "Ver"} paquetes de ${order.number}`} onClick={() => setExpanded((value) => !value)}>
-        <span>{expanded ? "Ocultar paquetes" : "Ver paquetes"}<span className="package-total">{order.summary.totalPackages}</span></span>
+        aria-label={`${expanded ? "Ocultar" : "Ver"} paquetes ${order.summary.totalPackages} del pedido ${order.number}`} onClick={() => setExpanded((value) => !value)}>
+        <span>{expanded ? "Ocultar paquetes" : "Ver paquetes"}{" "}<span className="package-total">{order.summary.totalPackages}</span></span>
         <span aria-hidden="true">{expanded ? "−" : "+"}</span>
       </button>
       {expanded && <div id={detailsId} className="order-detail" role="region" aria-label={`Paquetes del pedido ${order.number}`} aria-busy={detail.isFetching}>

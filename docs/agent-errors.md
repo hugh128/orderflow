@@ -87,3 +87,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: en el recorrido real solo con teclado, se creó el pedido correctamente, pero document.activeElement terminó en body.
 - Cómo se corrigió: después del éxito se enfoca Número de pedido, siempre que el usuario no se haya movido fuera del formulario durante la petición. Se añadió una aserción de foco a la prueba del envío.
 - Lección / regla añadida: verificar también el foco tras deshabilitar y rehabilitar controles, no solo tras eliminarlos del DOM.
+
+## Error 14: nombre accesible del detalle sin el contador visible
+- Qué pasó: el botón mostraba «Ver paquetes» y su cantidad, pero aria-label incluía el número del pedido sin esa cantidad.
+- Cómo se detectó: Lighthouse con tarjetas y 1 000 paquetes expandidos reportó label-content-name-mismatch en los tres botones de detalle, aunque la puntuación de categoría era 100.
+- Cómo se corrigió: el texto visible lleva un espacio antes del contador y el nombre accesible incluye ese mismo texto y el identificador del pedido.
+- Lección / regla añadida: revisar los hallazgos individuales de la auditoría y auditar estados con datos; una puntuación alta en una página vacía no cubre sus controles dinámicos.
