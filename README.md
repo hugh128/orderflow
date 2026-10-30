@@ -35,5 +35,6 @@ Los scripts `db:generate` y `db:migrate` están preparados; el esquema y las mig
 - `specs/plan.md`: arquitectura y contratos.
 - `specs/tasks.md`: tareas y avance.
 - `docs/agent-errors.md`: errores detectados y correcciones.
+- `docs/deployment.md`: configuración y verificaciones de CI, Supabase y Vercel (T02).
 
 Pendiente desde T02: CI y despliegue, dominio, persistencia, API, interfaz funcional y extra de IA con OpenAI. El README final y la URL pública se completarán en T25.
