@@ -57,3 +57,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: las pruebas y tipos de CI pasaron, pero el build falló por ausencia de DATABASE_URL; el preview también falló.
 - Cómo se corrigió: el repositorio obtiene el cliente mediante inicialización diferida. Importar las rutas no requiere secretos; utilizar la BD sin configuración sigue lanzando un error explícito, que el handler convierte en 500 genérico.
 - Lección / regla añadida: verificar que el build no depende de secretos locales; las conexiones y su validación deben iniciarse cuando se utilizan, no al importar las rutas.
+
+## Error 9: incompatibilidad entre el input de Zod y el estado del formulario
+- Qué pasó: pasé directamente a TanStack Form el esquema con preprocess, cuyo input de units es unknown, mientras el formulario conserva strings.
+- Cómo se detectó: los 13 casos de componente pasaron, pero typecheck rechazó la asignación Standard Schema y la inferencia de mensajes de campo.
+- Cómo se corrigió: un adaptador tipado ejecuta safeParse sobre el mismo createOrderSchema y devuelve sus mensajes por campo; el envío sigue usando parse para obtener unidades numéricas y textos recortados.
+- Lección / regla añadida: verificar el contrato de tipos de los validadores con transformaciones; adaptar la interfaz sin duplicar reglas ni usar casts para ocultar incompatibilidades.

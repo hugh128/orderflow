@@ -95,7 +95,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 - [x] **T16 Proveedores y layout** ⏱ 15 min · Dep. T01
   - `QueryClientProvider`, layout con título, estilos base de Tailwind, función `apiFetch` tipada que lanza un `ApiError` con `code` y `message`. (`feat(ui): layout and providers`)
 
-- [ ] **T17 Formulario de creación** ⏱ 35 min · Dep. T13, T16 · **CA-07, 08, 09, 11**
+- [x] **T17 Formulario de creación** ⏱ 35 min · Dep. T13, T16 · **CA-07, 08, 09, 11**
   - TanStack Form con `createOrderSchema`; campo de unidades `type="text" inputMode="numeric"`; errores bajo cada campo; el 409 de duplicado se muestra en el campo número; deshabilitar el botón mientras guarda; limpiar el formulario al guardar con éxito.
   - Pruebas de componente (Vitest + Testing Library) para validación y mensajes. (`feat(ui): create order form`)
 
