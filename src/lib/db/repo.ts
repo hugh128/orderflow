@@ -1,8 +1,11 @@
 import type { z } from "zod";
+import { and, eq } from "drizzle-orm";
+import { advance, reject } from "../domain/package-status";
+import type { PackageStatus } from "../domain/types";
 import type { createOrderSchema } from "../schemas/order";
 import { splitIntoPackages } from "../domain/split-into-packages";
 import { db } from "./client";
-import { DuplicateOrderNumberError, isUniqueViolation } from "./errors";
+import { DuplicateOrderNumberError, isUniqueViolation, NotFoundError, StatusConflictError } from "./errors";
 import { orders, packages } from "./schema";
 
 export async function createOrderWithPackages(input: z.output<typeof createOrderSchema>) {
@@ -28,4 +31,22 @@ export async function createOrderWithPackages(input: z.output<typeof createOrder
     if (isUniqueViolation(error)) throw new DuplicateOrderNumberError();
     throw error;
   }
+}
+
+export async function transitionPackage(
+  id: string,
+  expected: PackageStatus,
+  kind: "advance" | "reject",
+) {
+  const status = kind === "advance" ? advance(expected) : reject(expected);
+  const [updated] = await db.update(packages)
+    .set({ status, updatedAt: new Date() })
+    .where(and(eq(packages.id, id), eq(packages.status, expected)))
+    .returning();
+  if (updated) return updated;
+
+  const [current] = await db.select({ status: packages.status }).from(packages)
+    .where(eq(packages.id, id)).limit(1);
+  if (!current) throw new NotFoundError();
+  throw new StatusConflictError(current.status);
 }
