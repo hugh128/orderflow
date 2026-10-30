@@ -13,7 +13,7 @@ corepack pnpm install --frozen-lockfile
 corepack pnpm dev
 ```
 
-Abrir http://localhost:3000. Este esqueleto funciona sin base de datos ni API key.
+Abrir http://localhost:3000. Para crear y consultar pedidos hace falta configurar la base de datos; la API key de IA sigue siendo opcional.
 
 Para las tareas de persistencia, copiar `.env.example` a `.env` y configurar las conexiones. `DATABASE_URL` usa el pooler; `DATABASE_URL_DIRECT`, la conexión directa para migraciones. `TEST_DATABASE_URL` debe apuntar a una base de pruebas separada. No guardar secretos en Git.
 
@@ -26,7 +26,7 @@ corepack pnpm test
 corepack pnpm build
 ```
 
-`typecheck` genera los tipos de rutas de Next.js antes de ejecutar TypeScript, por lo que funciona desde un checkout limpio. Vitest usa Node por defecto; las pruebas de componentes seleccionan jsdom mediante `@vitest-environment jsdom`.
+`typecheck` genera los tipos de rutas de Next.js antes de ejecutar TypeScript, por lo que funciona desde un checkout limpio. Vitest separa unitarias en Node, componentes en jsdom e integración con PostgreSQL. Para ejecutar solo componentes sin BD: `corepack pnpm exec vitest run --project components`.
 
 `pnpm test` incluye integración y necesita PostgreSQL local. Para ejecutar solo unitarias sin BD: `corepack pnpm test:unit`. Para preparar el contenedor de pruebas y `TEST_DATABASE_URL`, seguir [la guía de BD y pruebas](docs/database-testing.md).
 
