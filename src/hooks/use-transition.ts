@@ -15,5 +15,7 @@ export function useTransition() {
     onSuccess: () => synchronize(),
     onError: () => synchronize(),
   });
-  return { ...mutation, synchronize };
+  const hasSynchronizationError = () => client.getQueryCache().findAll({ queryKey: orderKeys.all })
+    .some((query) => query.isActive() && query.state.status === "error");
+  return { ...mutation, synchronize, hasSynchronizationError };
 }

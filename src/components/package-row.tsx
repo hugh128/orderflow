@@ -41,20 +41,31 @@ export function PackageRow({ pkg }: { pkg: PackageDTO }) {
     setFailed(false);
     try {
       const result = await mutation.mutateAsync({ id: pkg.id, expectedStatus: pkg.status, kind });
-      setMessage(`Paquete ${pkg.sequence} pasó a ${STATUS_LABELS[result.package.status]}`);
+      const stale = mutation.hasSynchronizationError();
+      setFailed(stale);
+      setMessage(`Paquete ${pkg.sequence} pasó a ${STATUS_LABELS[result.package.status]}${stale ? ". No se pudo actualizar la vista; reintenta la sincronización" : ""}`);
     } catch (error) {
       setFailed(true);
       setMessage(error instanceof ApiError && error.code === "STATUS_CONFLICT"
-        ? "El paquete ya había cambiado de estado; se actualizó la vista"
+        ? mutation.hasSynchronizationError()
+          ? "El paquete ya había cambiado de estado. No se pudo actualizar la vista; reintenta la sincronización"
+          : "El paquete ya había cambiado de estado; se actualizó la vista"
         : error instanceof ApiError ? error.message : "No se pudo actualizar el paquete. Inténtalo de nuevo.");
     } finally { locked.current = false; }
   }
 
   async function synchronize() {
     if (locked.current) return;
+    restoreFocus.current = Boolean(row.current?.contains(document.activeElement));
+    originStatus.current = pkg.status;
     locked.current = true;
     setSynchronizing(true);
-    try { await mutation.synchronize(); }
+    try {
+      await mutation.synchronize();
+      const stale = mutation.hasSynchronizationError();
+      setFailed(stale);
+      setMessage(stale ? "No se pudo actualizar la vista. Revisa tu conexión y reintenta." : "Vista actualizada");
+    }
     finally { locked.current = false; setSynchronizing(false); }
   }
 

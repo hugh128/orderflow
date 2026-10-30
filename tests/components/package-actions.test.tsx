@@ -125,4 +125,28 @@ describe("acciones de paquetes", () => {
       : "Paquete 1 pasó a Listo"));
     await waitFor(() => expect(firstRow).toHaveFocus());
   });
+
+  it("CA-33: si falla el refetch tras un conflicto informa y reintenta solo la lectura", async () => {
+    let transitioned = false;
+    fetchMock.mockImplementation(async (url, options) => {
+      if (options?.method === "POST") {
+        transitioned = true;
+        return Response.json({ error: { code: "STATUS_CONFLICT", message: "El estado cambió", details: { currentStatus: "in_progress" } } }, { status: 409 });
+      }
+      if (transitioned) throw new TypeError("offline");
+      return Response.json(url === "/api/orders" ? [order] : order);
+    });
+    renderWithQuery(<OrderList />);
+    fireEvent.click(await screen.findByRole("button", { name: "Ver paquetes 3 del pedido A-1" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Avanzar paquete 1 a En proceso" }));
+    const firstRow = screen.getByText("Paquete 1").closest("li")!;
+    await waitFor(() => expect(within(firstRow).getByRole("status")).toHaveTextContent("No se pudo actualizar la vista"));
+    expect(within(firstRow).getByText("Pendiente")).toBeInTheDocument();
+    const updated = { ...order, packages: order.packages.map((item, index) => ({ ...item, status: index === 0 ? "in_progress" as const : item.status })) };
+    fetchMock.mockImplementation(async (url) => Response.json(url === "/api/orders" ? [updated] : updated));
+    fireEvent.click(within(firstRow).getByRole("button", { name: "Reintentar sincronización del paquete 1" }));
+    await waitFor(() => expect(within(firstRow).getByText("En proceso")).toBeInTheDocument());
+    await waitFor(() => expect(within(firstRow).getByRole("status")).toHaveTextContent("Vista actualizada"));
+    expect(fetchMock.mock.calls.filter(([, options]) => options?.method === "POST")).toHaveLength(1);
+  });
 });

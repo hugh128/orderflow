@@ -93,3 +93,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: Lighthouse con tarjetas y 1 000 paquetes expandidos reportó label-content-name-mismatch en los tres botones de detalle, aunque la puntuación de categoría era 100.
 - Cómo se corrigió: el texto visible lleva un espacio antes del contador y el nombre accesible incluye ese mismo texto y el identificador del pedido.
 - Lección / regla añadida: revisar los hallazgos individuales de la auditoría y auditar estados con datos; una puntuación alta en una página vacía no cubre sus controles dinámicos.
+
+## Error 15: confirmar sincronización aunque el refetch había fallado
+- Qué pasó: tras STATUS_CONFLICT mostraba «se actualizó la vista» aunque los GET posteriores fallaran por red. invalidateQueries no rechaza por defecto esos fallos de lectura.
+- Cómo se detectó: una prueba con POST 409 y ambos GET fallidos conservó el estado Pendiente, pero recibió el mensaje de actualización exitosa.
+- Cómo se corrigió: se comprueba si las consultas activas de pedidos terminaron en error. Se informa de la vista pendiente de sincronizar y el reintento vuelve a leer sin reenviar el POST; al recuperar la red confirma Vista actualizada.
+- Lección / regla añadida: no confundir la finalización de la invalidación con una lectura exitosa; probar también el fallo de red después de un conflicto.

@@ -24,7 +24,9 @@ La [documentación de TanStack Query](https://tanstack.com/query/latest/docs/fra
 - Regiones de anuncio persistentes, estados con texto y nombres de detalle que incluyen su contador visible.
 - La barra solo anima cuando no está activado prefers-reduced-motion.
 
-Resultado: **305 pruebas**, lint, typecheck y build aprobados. No se añadieron dependencias. Los errores reales 11–14 están registrados; las correcciones de foco y nombre accesible tienen commits fix separados.
+Resultado: **306 pruebas**, lint, typecheck y build aprobados. No se añadieron dependencias. Los errores reales 11–15 están registrados; las correcciones de foco, nombre accesible y sincronización tienen commits fix separados.
+
+Una prueba adicional simula POST 409 seguido de GET fallidos: la interfaz informa que no pudo actualizarse y, al recuperar la red, el reintento sincroniza sin repetir el POST. Se consulta el resultado real de las lecturas, porque invalidateQueries no rechaza esos errores por defecto.
 
 ## Revisión real con Chrome DevTools
 
