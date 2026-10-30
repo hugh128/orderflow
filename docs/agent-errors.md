@@ -63,3 +63,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: los 13 casos de componente pasaron, pero typecheck rechazó la asignación Standard Schema y la inferencia de mensajes de campo.
 - Cómo se corrigió: un adaptador tipado ejecuta safeParse sobre el mismo createOrderSchema y devuelve sus mensajes por campo; el envío sigue usando parse para obtener unidades numéricas y textos recortados.
 - Lección / regla añadida: verificar el contrato de tipos de los validadores con transformaciones; adaptar la interfaz sin duplicar reglas ni usar casts para ocultar incompatibilidades.
+
+## Error 10: la prueba inicial montaba la página sin sus proveedores
+- Qué pasó: al reemplazar la página inicial por formulario y lista, mantuve el montaje aislado de Home en la prueba de T01, sin el Providers del layout.
+- Cómo se detectó: la suite completa falló con «No QueryClient set»; las pruebas de los componentes nuevos sí tenían su proveedor.
+- Cómo se corrigió: la prueba de página monta Providers y simula una lista vacía mediante fetch, conservando su comprobación del título.
+- Lección / regla añadida: al integrar componentes en una página, actualizar también su prueba de composición para reflejar los proveedores que aporta el layout real.
