@@ -15,3 +15,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: `pnpm peers check` informó el peer incompatible `@types/node`.
 - Cómo se corrigió: se instaló `@types/node` 22 y se declaró Node.js 22.18 o superior como requisito del proyecto.
 - Lección / regla añadida: comprobar los peer dependencies al combinar la plantilla del framework con las herramientas de pruebas.
+
+## Error 2: prueba de dominio demasiado costosa
+- Qué pasó: en T04 añadí una prueba que dividía todos los totales de 1 a 100 000, generando aproximadamente 50 millones de paquetes.
+- Cómo se detectó: `CA-05: conserva la suma y los rangos para todo total válido` excedió el timeout de cinco segundos; los otros 13 casos pasaron.
+- Cómo se corrigió: se mantuvieron las mismas verificaciones de suma, cantidad y tamaños sobre casos deterministas que cubren todos los restos y los límites de cada cantidad de paquetes, sin aumentar el timeout.
+- Lección / regla añadida: elegir clases de equivalencia y límites para mantener rápidas las pruebas unitarias; un barrido completo no siempre aporta valor proporcional a su costo.
