@@ -24,7 +24,6 @@ export function AiOrderBox({ onDraft, disabled = false }: {
     setError("");
     try {
       const proposal = await mutation.mutateAsync(text.trim());
-      await onDraft(proposal.draft);
       setResult(proposal);
     } catch (failure) {
       setError(failure instanceof ApiError ? failure.message : "No se pudo analizar el pedido. Puedes completar el formulario manualmente.");
@@ -49,8 +48,15 @@ export function AiOrderBox({ onDraft, disabled = false }: {
     </button>
     <div className="ai-result" aria-live="polite" aria-atomic="true">
       {pending && <p className="muted">Analizando el pedido…</p>}
-      {result && <><p className="success-message">Revisa los datos antes de guardar</p>
-        {result.issues.length > 0 && <ul className="ai-issues">{result.issues.map(({ field, message }) => <li key={field}>{message}</li>)}</ul>}</>}
+      {result && <div className="assistant-proposal"><h3>Tu propuesta de pedido</h3>
+        <dl>{([
+          ["number", "Número de pedido"], ["customer", "Cliente"], ["units", "Cantidad de unidades"],
+        ] as const).map(([field, label]) => <div key={field}><dt>{label}</dt><dd>{result.draft[field] ?? "Sin detectar"}</dd></div>)}</dl>
+        <p className="muted">Revisa los datos antes de guardar</p>
+        {result.issues.length > 0 && <ul className="ai-issues">{result.issues.map(({ field, message }) => <li key={field}>{message}</li>)}</ul>}
+        <button type="button" className="button primary" disabled={disabled || Object.keys(result.draft).length === 0}
+          onClick={() => void onDraft(result.draft)}>Usar estos datos</button>
+      </div>}
       {error && <p className="field-error">{error}</p>}
     </div>
   </div>;

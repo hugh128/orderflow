@@ -5,7 +5,7 @@ import { useForm } from "@tanstack/react-form";
 import { useCreateOrder } from "@/hooks/use-create-order";
 import { ApiError } from "@/lib/api/client";
 import { createOrderSchema } from "@/lib/schemas/order";
-import { AiOrderBox } from "./ai-order-box";
+import { AiAssistant } from "./ai-assistant";
 import type { OrderDraft } from "@/lib/ai/parse-order";
 
 const fields = [
@@ -103,7 +103,7 @@ export function OrderForm() {
         <h2 id="create-title">Nuevo pedido</h2>
         <p className="muted">Los paquetes se generan automáticamente, hasta 100 unidades por paquete.</p>
       </div>
-      <AiOrderBox onDraft={applyDraft} disabled={mutation.isPending} />
+      <AiAssistant onDraft={applyDraft} disabled={mutation.isPending} />
       <form ref={formElement} aria-label="Crear pedido" noValidate onSubmit={(event) => {
         event.preventDefault();
         if (!submitting.current) void form.handleSubmit();
