@@ -68,7 +68,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
   - Pruebas: avance y rechazo válidos persisten; `expected` ≠ estado real → `StatusConflictError` con `currentStatus`; `done` + avanzar → `InvalidTransitionError`; id inexistente → `NotFoundError`; **dos `advance` concurrentes** con el mismo `expected` → un éxito y un conflicto, y el estado final avanzó **una sola vez**.
   - Implementar `transitionPackage`. (`feat(db): atomic package transitions`)
 
-- [ ] **T11 Consultas con resumen** ⏱ 25 min · Dep. T06, T09 · **CA-22 a 26, 27, 29**
+- [x] **T11 Consultas con resumen** ⏱ 25 min · Dep. T06, T09 · **CA-22 a 26, 27, 29**
   - Pruebas: `listOrders` devuelve más reciente primero, con `summary` correcto (usa `computeProgress`); usa 2 consultas (sin N+1); `getOrder` incluye paquetes ordenados por `sequence`; `getOrder` de id inexistente → `null`; los datos persisten entre instancias del cliente de BD.
   - Implementar `listOrders` y `getOrder`. (`feat(db): list and get orders with progress summary`)
 
@@ -76,7 +76,7 @@ Leyenda: **CA** = criterios de aceptación que cubre · **Dep.** = dependencias 
 
 ## Fase 4: API
 
-- [ ] **T12 Utilidades de API** ⏱ 15 min · Dep. T09, T10
+- [x] **T12 Utilidades de API** ⏱ 15 min · Dep. T09, T10
   - `handleError` que mapea `ZodError` → 400 `VALIDATION_ERROR` (con `details` por campo), `DuplicateOrderNumberError` → 409, `InvalidTransitionError` → 409, `StatusConflictError` → 409 con `currentStatus`, `NotFoundError` → 404, otros → 500 genérico (sin filtrar detalles). Pruebas unitarias de cada mapeo. (`feat(api): add error mapping`)
 
 - [ ] **T13 `POST /api/orders`** ⏱ 20 min · Dep. T12 · **CA-01, 07, 08, 09, 11, 12**

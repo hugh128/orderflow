@@ -39,3 +39,9 @@ Añadir los errores relevantes con esta plantilla:
 - Cómo se detectó: CA-28 recibió `updated_at` como texto en vez de Date al ejecutar la suite completa.
 - Cómo se corrigió: clientes separados para consultas SQL directas y repositorio, ambos limitados a la base local protegida.
 - Lección / regla añadida: comprobar los efectos del adaptador sobre el cliente y ejecutar también las pruebas existentes al cambiar la infraestructura.
+
+## Error 6: sumar los datos esperados en vez del resumen real
+- Qué pasó: añadí una comprobación de suma de contadores sobre la tabla de valores esperados, en vez del resultado del repositorio.
+- Cómo se detectó: typecheck rechazó el acumulador de `reduce`, porque la tabla `as const` limitaba el tipo a los literales 0, 1, 2 y 3. Revisar esa línea también mostró que la comprobación no verificaba el resultado real.
+- Cómo se corrigió: la suma se verifica sobre `detail.summary.counts`, manteniendo además la comparación exacta del resumen completo.
+- Lección / regla añadida: las aserciones deben comprobar la salida del sistema, no propiedades de los propios datos esperados.

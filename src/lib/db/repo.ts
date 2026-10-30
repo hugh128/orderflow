@@ -1,5 +1,6 @@
 import type { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { computeProgress } from "../domain/compute-progress";
 import { advance, reject } from "../domain/package-status";
 import type { PackageStatus } from "../domain/types";
 import type { createOrderSchema } from "../schemas/order";
@@ -49,4 +50,27 @@ export async function transitionPackage(
     .where(eq(packages.id, id)).limit(1);
   if (!current) throw new NotFoundError();
   throw new StatusConflictError(current.status);
+}
+
+export async function listOrders() {
+  const rows = await db.select().from(orders).orderBy(desc(orders.createdAt), desc(orders.id));
+  if (rows.length === 0) return [];
+
+  const allPackages = await db.select().from(packages)
+    .where(inArray(packages.orderId, rows.map((order) => order.id)));
+  const grouped = new Map<string, (typeof packages.$inferSelect)[]>();
+  for (const pkg of allPackages) {
+    const group = grouped.get(pkg.orderId);
+    if (group) group.push(pkg);
+    else grouped.set(pkg.orderId, [pkg]);
+  }
+  return rows.map((order) => ({ ...order, summary: computeProgress(grouped.get(order.id) ?? []) }));
+}
+
+export async function getOrder(id: string) {
+  const [order] = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
+  if (!order) return null;
+  const orderedPackages = await db.select().from(packages)
+    .where(eq(packages.orderId, id)).orderBy(asc(packages.sequence));
+  return { ...order, packages: orderedPackages, summary: computeProgress(orderedPackages) };
 }
